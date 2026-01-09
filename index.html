@@ -236,8 +236,7 @@
             const password = document.getElementById('password').value;
             if (!userName) { alert("אנא הכניסו שם מלא"); return; }
             if (!userClass) { alert("אנא בחרו כיתה"); return; }
-            if (currentRole === 'teacher' && password !== teacherPassword) {
-                alert("סיסמת המורה שגויה. הסיסמה הנכונה היא: 1957"); return;
+           
             }
             currentUser = { name: userName, class: userClass, role: currentRole, loginTime: new Date().toLocaleString('he-IL') };
             if (currentRole === 'student') { showStudentScreen(); } else { showTeacherScreen(); }
