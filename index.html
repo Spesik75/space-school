@@ -3,77 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>חידון חלל - נקודות משותפות</title>
+    <title>חידון חלל - בית ספר (משותף)</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: Arial, sans-serif; 
-            background: #0a0e27; 
-            color: white; 
-            padding: 20px;
-            min-height: 100vh;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
-        .container { max-width: 800px; margin: 0 auto; }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            font-family: 'Arial', sans-serif;
+        }
         
-        .header { 
-            text-align: center; 
-            padding: 20px; 
-            background: rgba(0,0,0,0.7); 
-            border-radius: 15px;
+        body {
+            background: #0a0e27;
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+        }
+        
+        /* אנימציית כוכבים */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+        
+        /* הודעות טעינה */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #4fc3f7;
+        }
+        
+        .loader {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4fc3f7;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* קונטיינר ראשי */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        /* כותרות */
+        .header {
+            text-align: center;
+            padding: 20px;
             margin-bottom: 20px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
             border: 2px solid #4fc3f7;
         }
         
-        h1 { color: #4fc3f7; margin-bottom: 10px; }
-        
-        .screen { 
-            display: none; 
-            background: rgba(0,0,0,0.7); 
-            padding: 20px; 
-            border-radius: 15px; 
-            margin-bottom: 20px;
+        h1 {
+            color: #4fc3f7;
+            font-size: 2rem;
+            margin-bottom: 10px;
         }
         
-        .active { display: block; }
+        h2 {
+            color: #ffca28;
+            margin: 15px 0;
+        }
         
-        .btn {
-            padding: 12px 24px;
-            margin: 10px;
-            background: #4fc3f7;
-            color: black;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
+        /* מסכים */
+        .screen {
+            display: none;
+            background: rgba(0,0,0,0.7);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(79,195,247,0.3);
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        /* כפתורי תפקיד */
+        .role-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .role-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            background: rgba(30,30,60,0.8);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            display: inline-block;
+            transition: all 0.3s;
         }
         
-        .btn-orange {
-            background: #ff9800;
+        .role-btn.active {
+            background: #4fc3f7;
+            color: black;
+            border-color: #4fc3f7;
         }
         
-        .btn-red {
-            background: #f44336;
-            color: white;
+        /* שדות קלט */
+        .input-group {
+            margin: 15px 0;
+            text-align: right;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffca28;
+            font-weight: bold;
         }
         
         input, select {
+            width: 100%;
+            max-width: 400px;
             padding: 12px;
-            margin: 10px;
-            width: 90%;
-            max-width: 300px;
+            margin: 5px 0;
             border-radius: 8px;
             border: 2px solid #4fc3f7;
             background: #111;
             color: white;
-            text-align: center;
             font-size: 16px;
+            text-align: center;
         }
         
+        /* כפתורים */
+        .btn {
+            padding: 12px 24px;
+            margin: 10px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #4fc3f7;
+            color: black;
+        }
+        
+        .btn-secondary {
+            background: #ffca28;
+            color: black;
+        }
+        
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* חידון */
+        .quiz-box {
+            background: rgba(30,30,60,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #4fc3f7;
+        }
+        
+        .question {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .answers {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .answer-btn {
+            padding: 15px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .answer-btn:hover {
+            background: #283593;
+        }
+        
+        .answer-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        /* לוח ניקוד */
         .scoreboard {
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.6);
             padding: 15px;
             border-radius: 10px;
             margin: 20px 0;
@@ -82,7 +254,7 @@
         
         .score-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 10px;
             margin-top: 15px;
         }
@@ -93,282 +265,688 @@
             border-radius: 8px;
             text-align: center;
             border: 1px solid #4fc3f7;
+            transition: all 0.3s;
         }
         
-        .highlight {
-            background: rgba(255, 202, 40, 0.3);
-            border: 2px solid #ffca28;
+        .score-item.updated {
+            animation: highlight 1s;
         }
         
-        .status {
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px;
-            text-align: center;
+        @keyframes highlight {
+            0% { background: rgba(255, 202, 40, 0.8); }
+            100% { background: rgba(30,30,60,0.8); }
+        }
+        
+        .class-name {
+            font-weight: bold;
+            color: #ffca28;
+        }
+        
+        .points {
+            font-size: 1.3rem;
+            color: #4fc3f7;
             font-weight: bold;
         }
         
-        .online {
-            background: rgba(76, 175, 80, 0.2);
-            color: #4CAF50;
+        /* כפתור יציאה */
+        .logout-btn {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 8px 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: 1px solid #ffca28;
+            border-radius: 6px;
+            cursor: pointer;
+            z-index: 100;
+        }
+        
+        /* סטטוס חיבור */
+        .connection-status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        .connected {
+            background: rgba(76, 175, 80, 0.7);
             border: 1px solid #4CAF50;
         }
         
-        .offline {
-            background: rgba(244, 67, 54, 0.2);
-            color: #f44336;
+        .disconnected {
+            background: rgba(244, 67, 54, 0.7);
             border: 1px solid #f44336;
         }
         
+        /* התאמה למובייל */
         @media (max-width: 768px) {
-            .score-grid { grid-template-columns: repeat(3, 1fr); }
-            .btn { display: block; width: 90%; margin: 10px auto; }
+            .container {
+                padding: 5px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .role-buttons {
+                flex-direction: column;
+            }
+            
+            .answers {
+                grid-template-columns: 1fr;
+            }
+            
+            .score-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .btn {
+                width: 90%;
+                margin: 10px auto;
+                display: block;
+            }
+            
+            .logout-btn, .connection-status {
+                position: relative;
+                top: auto;
+                left: auto;
+                right: auto;
+                margin: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .score-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .screen {
+                padding: 15px;
+            }
         }
     </style>
     
-    <!-- Firebase -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🚀 חידון חלל - נקודות משותפות</h1>
-            <p>כל הכיתות - אותן נקודות בזמן אמת!</p>
-        </div>
-        
-        <!-- סטטוס חיבור -->
-        <div id="status" class="status offline">
-            🔄 מתחבר לענן...
-        </div>
-        
+    <!-- הודעת טעינה -->
+    <div id="loadingScreen" class="loading">
+        <h2>🚀 טוען חידון חלל...</h2>
+        <div class="loader"></div>
+        <p>מתחבר לענן לשיתוף נקודות</p>
+    </div>
+    
+    <!-- סטטוס חיבור -->
+    <div id="connectionStatus" class="connection-status" style="display: none;">
+        מתחבר...
+    </div>
+    
+    <!-- כפתור יציאה -->
+    <button class="logout-btn" onclick="logout()" id="logoutBtn" style="display: none;">
+        יציאה
+    </button>
+    
+    <!-- כוכבים ברקע -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- אפליקציה -->
+    <div class="container" id="app" style="display: none;">
         <!-- מסך התחברות -->
-        <div class="screen active" id="loginScreen">
-            <div style="text-align: center;">
-                <h2>התחברות</h2>
-                <input type="text" id="userName" placeholder="שמך המלא">
-                <select id="userClass">
-                    <option value="">בחר כיתה</option>
-                    <option value="ז1">ז1</option><option value="ז2">ז2</option>
-                    <option value="ז3">ז3</option><option value="ז4">ז4</option>
-                    <option value="ז5">ז5</option><option value="ז6">ז6</option>
-                    <option value="ז7">ז7</option><option value="ח1">ח1</option>
-                    <option value="ח2">ח2</option><option value="ח3">ח3</option>
-                    <option value="ח4">ח4</option><option value="ח5">ח5</option>
-                    <option value="ח6">ח6</option><option value="ט1">ט1</option>
-                    <option value="ט2">ט2</option><option value="ט3">ט3</option>
-                    <option value="ט4">ט4</option><option value="ט5">ט5</option>
-                    <option value="ט6">ט6</option>
-                </select>
-                <br>
-                <button class="btn" onclick="login()">התחל</button>
-            </div>
-        </div>
-        
-        <!-- מסך ראשי -->
-        <div class="screen" id="mainScreen">
+        <div class="screen" id="loginScreen">
             <div class="header">
-                <h2 id="welcome">ברוכים הבאים!</h2>
-                <p id="classInfo"></p>
+                <h1>🚀 חידון חלל בית ספרי</h1>
+                <p>ענן משותף - כל התלמידים רואים אותם נקודות!</p>
             </div>
             
-            <!-- כפתורי פעולה -->
             <div style="text-align: center; margin: 20px 0;">
-                <button class="btn" onclick="addPoint(1)">➕ הוסף נקודה</button>
-                <button class="btn btn-orange" onclick="addPoint(5)">➕➕➕ הוסף 5 נקודות</button>
-                <button class="btn btn-red" onclick="resetPoints()">🔄 אפס נקודות</button>
+                <h2>בחרו סוג משתמש:</h2>
+                <div class="role-buttons">
+                    <button class="role-btn active" onclick="selectRole('student')">תלמיד/ה</button>
+                    <button class="role-btn" onclick="selectRole('teacher')">מורה</button>
+                </div>
+            </div>
+            
+            <!-- טופס תלמיד -->
+            <div id="studentForm">
+                <div class="input-group">
+                    <label>שם מלא:</label>
+                    <input type="text" id="studentName" placeholder="הכניסו את שמכם">
+                </div>
+                
+                <div class="input-group">
+                    <label>בחרו כיתה:</label>
+                    <select id="studentClass">
+                        <option value="">-- בחרו כיתה --</option>
+                        <option value="ז1">ז1</option><option value="ז2">ז2</option>
+                        <option value="ז3">ז3</option><option value="ז4">ז4</option>
+                        <option value="ז5">ז5</option><option value="ז6">ז6</option>
+                        <option value="ז7">ז7</option><option value="ח1">ח1</option>
+                        <option value="ח2">ח2</option><option value="ח3">ח3</option>
+                        <option value="ח4">ח4</option><option value="ח5">ח5</option>
+                        <option value="ח6">ח6</option><option value="ט1">ט1</option>
+                        <option value="ט2">ט2</option><option value="ט3">ט3</option>
+                        <option value="ט4">ט4</option><option value="ט5">ט5</option>
+                        <option value="ט6">ט6</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- טופס מורה -->
+            <div id="teacherForm" style="display: none;">
+                <div class="input-group">
+                    <label>שם המורה:</label>
+                    <input type="text" id="teacherName" placeholder="הכניסו את שמכם">
+                </div>
+                
+                <div class="input-group">
+                    <label>סיסמת מורה:</label>
+                    <input type="password" id="teacherPassword" placeholder="הכניסו סיסמה">
+                    <small style="color: #81d4fa; display: block; margin-top: 5px;">
+                        
+                    </small>
+                </div>
+                
+                <div class="input-group">
+                    <label>כיתה שלכם:</label>
+                    <select id="teacherClass">
+                        <option value="">-- בחרו כיתה --</option>
+                        <option value="ז1">ז1</option><option value="ז2">ז2</option>
+                        <option value="ז3">ז3</option><option value="ז4">ז4</option>
+                        <option value="ז5">ז5</option><option value="ז6">ז6</option>
+                        <option value="ז7">ז7</option><option value="ח1">ח1</option>
+                        <option value="ח2">ח2</option><option value="ח3">ח3</option>
+                        <option value="ח4">ח4</option><option value="ח5">ח5</option>
+                        <option value="ח6">ח6</option><option value="ט1">ט1</option>
+                        <option value="ט2">ט2</option><option value="ט3">ט3</option>
+                        <option value="ט4">ט4</option><option value="ט5">ט5</option>
+                        <option value="ט6">ט6</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-primary" onclick="login()" id="loginBtn">
+                    כניסה למערכת
+                </button>
+            </div>
+        </div>
+        
+        <!-- מסך תלמיד -->
+        <div class="screen" id="studentScreen">
+            <div class="header">
+                <h2 id="studentWelcome"></h2>
+                <p id="studentInfo"></p>
+            </div>
+            
+            <!-- מסך התחלת חידון -->
+            <div id="startQuiz">
+                <div class="quiz-box">
+                    <h3 style="text-align: center; color: #4fc3f7; margin-bottom: 15px;">
+                        ברוכים הבאים לחידון החלל!
+                    </h3>
+                    <p style="text-align: center; margin-bottom: 20px;">
+                        לחצו על "התחל חידון" כדי להתחיל<br>
+                        כל תשובה נכונה = נקודה לכיתה שלכם!<br>
+                        <small style="color: #81d4fa;">(נקודות משותפות עם כל התלמידים)</small>
+                    </p>
+                    <button class="btn btn-primary" onclick="startQuiz()" style="display: block; margin: 20px auto;">
+                        התחל חידון
+                    </button>
+                </div>
+            </div>
+            
+            <!-- מסך חידון פעיל -->
+            <div id="quizActive" style="display: none;">
+                <div class="quiz-box">
+                    <div class="question" id="questionText"></div>
+                    <div class="answers" id="answers"></div>
+                </div>
+                
+                <div id="feedback" style="display: none; text-align: center; padding: 15px; margin: 15px 0; border-radius: 8px;"></div>
+                
+                <button class="btn btn-secondary" id="nextBtn" onclick="nextQuestion()" style="display: none; margin: 10px auto;">
+                    שאלה הבאה
+                </button>
             </div>
             
             <!-- לוח ניקוד -->
             <div class="scoreboard">
-                <h3 style="text-align: center; color: #ffca28;">🏆 לוח ניקוד משותף</h3>
+                <h3 style="text-align: center; color: #ffca28;">🏆 לוח ניקוד כיתות (משותף)</h3>
                 <div class="score-grid" id="scoreboard"></div>
                 <p style="text-align: center; color: #81d4fa; margin-top: 10px; font-size: 0.9rem;">
-                    מתעדכן אוטומטית עם כל המשתמשים
+                    הנקודות מתעדכנות אוטומטית עם כל התלמידים
                 </p>
             </div>
+        </div>
+        
+        <!-- מסך מורה -->
+        <div class="screen" id="teacherScreen">
+            <div class="header">
+                <h2 id="teacherWelcome"></h2>
+                <p id="teacherInfo"></p>
+            </div>
             
-            <div style="text-align: center; margin-top: 20px;">
-                <button class="btn btn-red" onclick="logout()">יציאה</button>
+            <!-- פקדי מורה -->
+            <div class="quiz-box">
+                <h3 style="text-align: center; color: #ffca28; margin-bottom: 15px;">
+                    ניהול כיתה - ענן משותף
+                </h3>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 15px 0;">
+                    <button class="btn btn-secondary" onclick="addPoints(1)">+1 נקודה</button>
+                    <button class="btn btn-secondary" onclick="addPoints(5)">+5 נקודות</button>
+                    <button class="btn btn-secondary" onclick="addPoints(10)">+10 נקודות</button>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: center; margin: 15px 0; flex-wrap: wrap;">
+                    <input type="number" id="customPoints" placeholder="מספר נקודות" 
+                           style="padding: 10px; border-radius: 8px; border: 2px solid #4fc3f7; background: #111; color: white; width: 120px;">
+                    <button class="btn btn-primary" onclick="addCustomPoints()">הוסף נקודות</button>
+                </div>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 15px 0;">
+                    <button class="btn btn-danger" onclick="resetClassPoints()">אפס נקודות לכיתה שלי</button>
+                    <button class="btn btn-danger" onclick="resetAllPoints()">אפס את כל הנקודות</button>
+                </div>
+            </div>
+            
+            <!-- לוח ניקוד למורה -->
+            <div class="scoreboard">
+                <h3 style="text-align: center; color: #ffca28;">📊 לוח ניקוד - ניהול מורה (משותף)</h3>
+                <div class="score-grid" id="teacherScoreboard"></div>
+                <p style="text-align: center; color: #81d4fa; margin-top: 10px; font-size: 0.9rem;">
+                    כל השינויים יראו לכל התלמידים והמורים
+                </p>
             </div>
         </div>
     </div>
 
     <script>
-        // ==================== הגדרות Firebase ====================
-        // TODO: החלף עם הקוד האמיתי שלך!
-        const firebaseConfig = {
-            apiKey: "AIzaSyDpq2jXjY-QTfc_N5S4sqLs-NaRS7ow1vQ",
-            authDomain: "space-school-72807.firebaseapp.com",
-            databaseURL: "https://space-school-72807-default-rtdb.firebaseio.com",
-            projectId: "space-school-72807",
-            storageBucket: "space-school-72807.firebasestorage.app",
-            messagingSenderId: "919939980128",
-            appId: "1:919939980128:web:53c7b02240b9ac8347dc05"
-        };
+        // ================ הגדרות Firebase ================
+        // TODO: החלף בהגדרות שלך מ-Firebase Console!
+       const firebaseConfig = {
+  apiKey: "AIzaSyDpq2jXjY-QTfc_N5S4sqLs-NaRS7ow1vQ",
+  authDomain: "space-school-72807.firebaseapp.com",
+  databaseURL: "https://space-school-72807-default-rtdb.firebaseio.com",
+  projectId: "space-school-72807",
+  storageBucket: "space-school-72807.firebasestorage.app",
+  messagingSenderId: "919939980128",
+  appId: "1:919939980128:web:53c7b02240b9ac8347dc05",
+  measurementId: "G-JS216DC8X8"
+};
         
-        // ==================== משתנים ====================
+        // ================ משתני מערכת ================
         const classes = ["ז1","ז2","ז3","ז4","ז5","ז6","ז7","ח1","ח2","ח3","ח4","ח5","ח6","ט1","ט2","ט3","ט4","ט5","ט6"];
+        const TEACHER_PASS = "1957";
+        
         let currentUser = null;
+        let currentRole = 'student';
         let points = {};
+        let currentQuestionIndex = 0;
+        let quizActive = false;
         let db = null;
         let pointsRef = null;
         
-        // ==================== Firebase ====================
-        function initFirebase() {
+        // שאלות החידון
+        const questions = [
+            {
+                question: "איזה כוכב לכת נקרא 'כוכב הלכת האדום'?",
+                answers: ["נוגה", "מאדים", "צדק", "שבתאי"],
+                correct: 1
+            },
+            {
+                question: "מהו כוכב הלכת הגדול ביותר במערכת השמש?",
+                answers: ["כדור הארץ", "שבתאי", "צדק", "נפטון"],
+                correct: 2
+            },
+            {
+                question: "מי היה האדם הראשון שצעד על הירח?",
+                answers: ["יורי גגארין", "באז אולדרין", "ניל ארמסטרונג", "מייקל קולינס"],
+                correct: 2
+            },
+            {
+                question: "מה שמה של הגלקסיה שלנו?",
+                answers: ["אנדרומדה", "שביל החלב", "גלקסיית הסומבררו", "גלקסיית המערבולת"],
+                correct: 1
+            },
+            {
+                question: "איזה כוכב לכת ידוע בטבעותיו המרהיבות?",
+                answers: ["צדק", "נפטון", "אורנוס", "שבתאי"],
+                correct: 3
+            }
+        ];
+        
+        // ================ פונקציות עזר ================
+        function createStars() {
+            const stars = document.getElementById('stars');
+            stars.innerHTML = '';
+            
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                stars.appendChild(star);
+            }
+        }
+        
+        function showNotification(message, type = 'info') {
+            alert(message); // אפשר להחליף ב-toast יפה יותר
+        }
+        
+        function updateConnectionStatus(connected) {
+            const statusEl = document.getElementById('connectionStatus');
+            statusEl.style.display = 'block';
+            
+            if (connected) {
+                statusEl.textContent = 'מחובר לענן ✅';
+                statusEl.className = 'connection-status connected';
+            } else {
+                statusEl.textContent = 'לא מחובר לענן ❌';
+                statusEl.className = 'connection-status disconnected';
+            }
+        }
+        
+        // ================ Firebase ================
+        async function initFirebase() {
             try {
-                console.log("מתחיל Firebase...");
-                
-                // אתחול
+                // אתחול Firebase
                 firebase.initializeApp(firebaseConfig);
                 db = firebase.database();
-                
-                console.log("Firebase אותחל!");
                 
                 // בדיקת חיבור
                 const connectedRef = db.ref('.info/connected');
                 connectedRef.on('value', (snap) => {
-                    const connected = snap.val() === true;
-                    updateStatus(connected);
-                    
-                    if (connected) {
-                        console.log("✅ מחובר לענן!");
-                        setupDatabase();
-                    }
+                    updateConnectionStatus(snap.val() === true);
                 });
                 
+                // הגדרת reference לנקודות
+                pointsRef = db.ref('points');
+                
+                // האזנה לשינויים בנקודות
+                pointsRef.on('value', (snapshot) => {
+                    const data = snapshot.val() || {};
+                    
+                    // עדכון הנקודות המקומיות
+                    classes.forEach(cls => {
+                        points[cls] = data[cls] || 0;
+                    });
+                    
+                    // עדכון המסכים אם הם פעילים
+                    if (currentUser) {
+                        if (currentUser.role === 'student') {
+                            updateScoreboard();
+                            updateStudentInfo();
+                        } else {
+                            updateTeacherScoreboard();
+                        }
+                    }
+                    
+                    // אנימציית עדכון
+                    highlightUpdatedClasses(data);
+                });
+                
+                // טעינת נקודות ראשונית
+                const snapshot = await pointsRef.once('value');
+                const data = snapshot.val() || {};
+                
+                classes.forEach(cls => {
+                    points[cls] = data[cls] || 0;
+                });
+                
+                return true;
             } catch (error) {
-                console.error("❌ שגיאת Firebase:", error);
-                updateStatus(false);
-                alert("לא ניתן להתחבר לענן. המערכת תעבוד מקומית.");
+                console.error('Firebase initialization error:', error);
+                showNotification('שגיאה בחיבור לענן. הנקודות ישמרו מקומית בלבד.', 'error');
+                return false;
             }
         }
         
-        function setupDatabase() {
-            pointsRef = db.ref('points');
-            
-            // האזנה לשינויים בזמן אמת
-            pointsRef.on('value', (snapshot) => {
-                const data = snapshot.val() || {};
-                console.log("📊 נתונים חדשים:", data);
-                
-                // עדכון נקודות
-                classes.forEach(cls => {
-                    points[cls] = data[cls] || 0;
-                });
-                
-                // עדכון תצוגה
-                updateScoreboard();
-                updateUserInfo();
-            });
-            
-            // טעינה ראשונית
-            pointsRef.once('value').then((snapshot) => {
-                const data = snapshot.val() || {};
-                console.log("📥 נתונים ראשוניים:", data);
-                
-                classes.forEach(cls => {
-                    points[cls] = data[cls] || 0;
-                });
-                
-                updateScoreboard();
+        function highlightUpdatedClasses(newData) {
+            classes.forEach(cls => {
+                if (newData[cls] !== points[cls]) {
+                    const items = document.querySelectorAll(`.score-item .class-name:contains('${cls}')`);
+                    items.forEach(item => {
+                        const parent = item.closest('.score-item');
+                        if (parent) {
+                            parent.classList.add('updated');
+                            setTimeout(() => parent.classList.remove('updated'), 1000);
+                        }
+                    });
+                }
             });
         }
         
-        async function saveToCloud() {
+        async function updatePointsInFirebase() {
             if (!pointsRef) {
-                console.log("💾 שמירה מקומית בלבד");
-                saveLocal();
+                console.log('No Firebase connection, saving locally');
+                // שמירה מקומית כגיבוי
+                classes.forEach(cls => {
+                    localStorage.setItem('points_' + cls, points[cls]);
+                });
                 return;
             }
             
             try {
                 await pointsRef.set(points);
-                console.log("✅ נשמר בענן!");
+                console.log('Points updated in Firebase');
             } catch (error) {
-                console.error("❌ שגיאה בשמירה לענן:", error);
-                saveLocal();
+                console.error('Error updating points in Firebase:', error);
+                showNotification('שגיאה בשמירת נקודות לענן', 'error');
             }
         }
         
-        function saveLocal() {
-            classes.forEach(cls => {
-                localStorage.setItem('points_' + cls, points[cls]);
+        // ================ ניהול מסכים ================
+        function selectRole(role) {
+            currentRole = role;
+            
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
             });
-        }
-        
-        function loadLocal() {
-            classes.forEach(cls => {
-                const saved = localStorage.getItem('points_' + cls);
-                points[cls] = saved ? parseInt(saved) : 0;
-            });
-        }
-        
-        // ==================== ממשק משתמש ====================
-        function updateStatus(connected) {
-            const statusEl = document.getElementById('status');
-            if (connected) {
-                statusEl.textContent = "✅ מחובר לענן - נקודות משותפות";
-                statusEl.className = "status online";
+            event.target.classList.add('active');
+            
+            if (role === 'student') {
+                document.getElementById('studentForm').style.display = 'block';
+                document.getElementById('teacherForm').style.display = 'none';
             } else {
-                statusEl.textContent = "⚠️ מצב מקלי - נקודות נשמרות במחשב זה בלבד";
-                statusEl.className = "status offline";
+                document.getElementById('studentForm').style.display = 'none';
+                document.getElementById('teacherForm').style.display = 'block';
             }
         }
         
         function login() {
-            const name = document.getElementById('userName').value.trim();
-            const className = document.getElementById('userClass').value;
+            let name, className, password;
             
-            if (!name || !className) {
-                alert('אנא מלא את כל השדות');
+            if (currentRole === 'student') {
+                name = document.getElementById('studentName').value.trim();
+                className = document.getElementById('studentClass').value;
+                
+                if (!name || !className) {
+                    showNotification('אנא מלאו את כל השדות', 'error');
+                    return;
+                }
+            } else {
+                name = document.getElementById('teacherName').value.trim();
+                password = document.getElementById('teacherPassword').value;
+                className = document.getElementById('teacherClass').value;
+                
+                if (!name || !password || !className) {
+                    showNotification('אנא מלאו את כל השדות', 'error');
+                    return;
+                }
+                
+                if (password !== TEACHER_PASS) {
+                    showNotification('סיסמה שגויה! הסיסמה הנכונה היא: 1957', 'error');
+                    return;
+                }
+            }
+            
+            currentUser = {
+                name: name,
+                class: className,
+                role: currentRole,
+                loginTime: new Date().toISOString()
+            };
+            
+            localStorage.setItem('last_user', JSON.stringify(currentUser));
+            
+            if (currentRole === 'student') {
+                showStudentScreen();
+                showNotification('ברוך הבא! הנקודות משותפות עם כל הכיתה!', 'success');
+            } else {
+                showTeacherScreen();
+                showNotification('ברוך הבא מורה! השינויים שלך יראו לכולם.', 'success');
+            }
+        }
+        
+        function showStudentScreen() {
+            showScreen('studentScreen');
+            document.getElementById('logoutBtn').style.display = 'block';
+            
+            updateStudentInfo();
+            updateScoreboard();
+            
+            document.getElementById('startQuiz').style.display = 'block';
+            document.getElementById('quizActive').style.display = 'none';
+            quizActive = false;
+            currentQuestionIndex = 0;
+        }
+        
+        function updateStudentInfo() {
+            if (!currentUser) return;
+            
+            document.getElementById('studentWelcome').textContent = `שלום ${currentUser.name}!`;
+            document.getElementById('studentInfo').textContent = 
+                `כיתה: ${currentUser.class} | נקודות: ${points[currentUser.class] || 0} (משותף)`;
+        }
+        
+        function showTeacherScreen() {
+            showScreen('teacherScreen');
+            document.getElementById('logoutBtn').style.display = 'block';
+            
+            document.getElementById('teacherWelcome').textContent = `מורה ${currentUser.name}`;
+            document.getElementById('teacherInfo').textContent = 
+                `כיתה: ${currentUser.class} | ניהול ענן משותף`;
+            
+            updateTeacherScoreboard();
+        }
+        
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+        
+        function logout() {
+            if (confirm('לצאת מהמערכת?')) {
+                currentUser = null;
+                localStorage.removeItem('last_user');
+                showScreen('loginScreen');
+                document.getElementById('logoutBtn').style.display = 'none';
+                
+                document.getElementById('studentName').value = '';
+                document.getElementById('studentClass').value = '';
+                document.getElementById('teacherName').value = '';
+                document.getElementById('teacherPassword').value = '';
+                document.getElementById('teacherClass').value = '';
+            }
+        }
+        
+        // ================ חידון ================
+        function startQuiz() {
+            document.getElementById('startQuiz').style.display = 'none';
+            document.getElementById('quizActive').style.display = 'block';
+            quizActive = true;
+            currentQuestionIndex = 0;
+            showQuestion();
+        }
+        
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endQuiz();
                 return;
             }
             
-            currentUser = { name: name, class: className };
+            const q = questions[currentQuestionIndex];
+            document.getElementById('questionText').textContent = q.question;
             
-            document.getElementById('welcome').textContent = `שלום ${name}!`;
-            document.getElementById('classInfo').textContent = `כיתה ${className}`;
+            const answersDiv = document.getElementById('answers');
+            answersDiv.innerHTML = '';
             
-            showScreen('mainScreen');
-            updateUserInfo();
+            q.answers.forEach((answer, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = answer;
+                btn.onclick = () => checkAnswer(index);
+                answersDiv.appendChild(btn);
+            });
+            
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
         }
         
-        function addPoint(pointsToAdd) {
-            if (!currentUser) return;
-            
+        function checkAnswer(answerIndex) {
+            const q = questions[currentQuestionIndex];
+            const feedback = document.getElementById('feedback');
             const className = currentUser.class;
-            points[className] = (points[className] || 0) + pointsToAdd;
             
-            saveToCloud();
-            updateScoreboard();
-            updateUserInfo();
+            // חסימת כפתורים
+            document.querySelectorAll('.answer-btn').forEach(btn => {
+                btn.disabled = true;
+            });
             
-            alert(`🎉 נוספו ${pointsToAdd} נקודות לכיתה ${className}!`);
+            if (answerIndex === q.correct) {
+                feedback.innerHTML = '🎉 <strong>תשובה נכונה!</strong> הכיתה קיבלה נקודה!';
+                feedback.style.background = 'rgba(76, 175, 80, 0.2)';
+                feedback.style.border = '2px solid #4CAF50';
+                feedback.style.color = '#4CAF50';
+                
+                // הוספת נקודה בענן
+                points[className] = (points[className] || 0) + 1;
+                updatePointsInFirebase();
+                
+                // עדכון מיידי
+                updateStudentInfo();
+                updateScoreboard();
+            } else {
+                feedback.innerHTML = `❌ <strong>לא נכון.</strong> התשובה הנכונה: ${q.answers[q.correct]}`;
+                feedback.style.background = 'rgba(244, 67, 54, 0.2)';
+                feedback.style.border = '2px solid #f44336';
+                feedback.style.color = '#f44336';
+            }
+            
+            feedback.style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'block';
         }
         
-        function resetPoints() {
-            if (!currentUser) return;
-            
-            if (confirm(`לאפס את הנקודות של כיתה ${currentUser.class}?`)) {
-                const className = currentUser.class;
-                points[className] = 0;
-                
-                saveToCloud();
-                updateScoreboard();
-                updateUserInfo();
-                
-                alert(`נקודות כיתה ${className} אופסו`);
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                endQuiz();
             }
         }
         
-        function updateUserInfo() {
-            if (!currentUser) return;
-            const className = currentUser.class;
-            document.getElementById('classInfo').textContent = 
-                `כיתה ${className}: ${points[className] || 0} נקודות`;
+        function endQuiz() {
+            showNotification(`כל הכבוד! סיימתם את החידון!\nכיתה ${currentUser.class} צברה ${points[currentUser.class]} נקודות`);
+            document.getElementById('startQuiz').style.display = 'block';
+            document.getElementById('quizActive').style.display = 'none';
+            quizActive = false;
         }
         
+        // ================ לוחות ניקוד ================
         function updateScoreboard() {
             const board = document.getElementById('scoreboard');
             if (!board) return;
@@ -379,59 +957,22 @@
                 const item = document.createElement('div');
                 item.className = 'score-item';
                 if (cls === currentUser?.class) {
-                    item.classList.add('highlight');
+                    item.style.background = 'rgba(255, 202, 40, 0.2)';
                 }
                 item.innerHTML = `
-                    <div style="font-weight: bold; color: #ffca28;">${cls}</div>
-                    <div style="font-size: 1.5rem; color: #4fc3f7; font-weight: bold;">
-                        ${points[cls] || 0}
-                    </div>
+                    <div class="class-name">${cls}</div>
+                    <div class="points">${points[cls] || 0}</div>
                 `;
                 board.appendChild(item);
             });
         }
         
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => {
-                s.classList.remove('active');
-            });
-            document.getElementById(screenId).classList.add('active');
-        }
-        
-        function logout() {
-            currentUser = null;
-            showScreen('loginScreen');
-            document.getElementById('userName').value = '';
-            document.getElementById('userClass').value = '';
-        }
-        
-        // ==================== אתחול ====================
-        function init() {
-            // טען נקודות מקומיות (לגיבוי)
-            loadLocal();
+        function updateTeacherScoreboard() {
+            const board = document.getElementById('teacherScoreboard');
+            if (!board) return;
             
-            // התחל Firebase
-            initFirebase();
+            board.innerHTML = '';
             
-            // בדוק אם יש משתמש שמור
-            const savedUser = localStorage.getItem('last_user');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                    showScreen('mainScreen');
-                    document.getElementById('welcome').textContent = `ברוך שובך ${currentUser.name}!`;
-                    updateUserInfo();
-                } catch (e) {
-                    console.log('לא ניתן לטעון משתמש');
-                }
-            }
-            
-            // עדכן לוח ניקוד ראשוני
-            updateScoreboard();
-        }
-        
-        // הפעל כשהדף נטען
-        window.onload = init;
-    </script>
-</body>
-</html>
+            classes.forEach(cls => {
+                const item = document.createElement('div');
+                item.className
