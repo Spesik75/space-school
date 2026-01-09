@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>חידון חלל - בית ספר</title>
+    <title>חידון חלל - בית ספר (משותף)</title>
     <style>
-        /* איפוס בסיסי */
         * {
             margin: 0;
             padding: 0;
@@ -47,6 +46,29 @@
         @keyframes twinkle {
             0%, 100% { opacity: 0.2; }
             50% { opacity: 0.8; }
+        }
+        
+        /* הודעות טעינה */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #4fc3f7;
+        }
+        
+        .loader {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4fc3f7;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         /* קונטיינר ראשי */
@@ -174,6 +196,11 @@
             color: white;
         }
         
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
         /* חידון */
         .quiz-box {
             background: rgba(30,30,60,0.8);
@@ -211,6 +238,11 @@
             background: #283593;
         }
         
+        .answer-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
         /* לוח ניקוד */
         .scoreboard {
             background: rgba(0,0,0,0.6);
@@ -233,6 +265,16 @@
             border-radius: 8px;
             text-align: center;
             border: 1px solid #4fc3f7;
+            transition: all 0.3s;
+        }
+        
+        .score-item.updated {
+            animation: highlight 1s;
+        }
+        
+        @keyframes highlight {
+            0% { background: rgba(255, 202, 40, 0.8); }
+            100% { background: rgba(30,30,60,0.8); }
         }
         
         .class-name {
@@ -258,6 +300,27 @@
             border-radius: 6px;
             cursor: pointer;
             z-index: 100;
+        }
+        
+        /* סטטוס חיבור */
+        .connection-status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        .connected {
+            background: rgba(76, 175, 80, 0.7);
+            border: 1px solid #4CAF50;
+        }
+        
+        .disconnected {
+            background: rgba(244, 67, 54, 0.7);
+            border: 1px solid #f44336;
         }
         
         /* התאמה למובייל */
@@ -287,6 +350,14 @@
                 margin: 10px auto;
                 display: block;
             }
+            
+            .logout-btn, .connection-status {
+                position: relative;
+                top: auto;
+                left: auto;
+                right: auto;
+                margin: 10px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -299,23 +370,39 @@
             }
         }
     </style>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
-    <!-- כוכבים ברקע -->
-    <div class="stars" id="stars"></div>
+    <!-- הודעת טעינה -->
+    <div id="loadingScreen" class="loading">
+        <h2>🚀 טוען חידון חלל...</h2>
+        <div class="loader"></div>
+        <p>מתחבר לענן לשיתוף נקודות</p>
+    </div>
+    
+    <!-- סטטוס חיבור -->
+    <div id="connectionStatus" class="connection-status" style="display: none;">
+        מתחבר...
+    </div>
     
     <!-- כפתור יציאה -->
     <button class="logout-btn" onclick="logout()" id="logoutBtn" style="display: none;">
         יציאה
     </button>
     
-    <!-- קונטיינר ראשי -->
-    <div class="container">
+    <!-- כוכבים ברקע -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- אפליקציה -->
+    <div class="container" id="app" style="display: none;">
         <!-- מסך התחברות -->
-        <div class="screen active" id="loginScreen">
+        <div class="screen" id="loginScreen">
             <div class="header">
                 <h1>🚀 חידון חלל בית ספרי</h1>
-                <p>ענו על שאלות חלל וצברו נקודות לכיתה שלכם!</p>
+                <p>ענן משותף - כל התלמידים רואים אותם נקודות!</p>
             </div>
             
             <div style="text-align: center; margin: 20px 0;">
@@ -362,6 +449,8 @@
                     <label>סיסמת מורה:</label>
                     <input type="password" id="teacherPassword" placeholder="הכניסו סיסמה">
                     <small style="color: #81d4fa; display: block; margin-top: 5px;">
+                        
+                    </small>
                 </div>
                 
                 <div class="input-group">
@@ -383,7 +472,9 @@
             </div>
             
             <div style="text-align: center; margin-top: 30px;">
-                <button class="btn btn-primary" onclick="login()">כניסה למערכת</button>
+                <button class="btn btn-primary" onclick="login()" id="loginBtn">
+                    כניסה למערכת
+                </button>
             </div>
         </div>
         
@@ -402,7 +493,8 @@
                     </h3>
                     <p style="text-align: center; margin-bottom: 20px;">
                         לחצו על "התחל חידון" כדי להתחיל<br>
-                        כל תשובה נכונה = נקודה לכיתה שלכם!
+                        כל תשובה נכונה = נקודה לכיתה שלכם!<br>
+                        <small style="color: #81d4fa;">(נקודות משותפות עם כל התלמידים)</small>
                     </p>
                     <button class="btn btn-primary" onclick="startQuiz()" style="display: block; margin: 20px auto;">
                         התחל חידון
@@ -426,8 +518,11 @@
             
             <!-- לוח ניקוד -->
             <div class="scoreboard">
-                <h3 style="text-align: center; color: #ffca28;">🏆 לוח ניקוד כיתות</h3>
+                <h3 style="text-align: center; color: #ffca28;">🏆 לוח ניקוד כיתות (משותף)</h3>
                 <div class="score-grid" id="scoreboard"></div>
+                <p style="text-align: center; color: #81d4fa; margin-top: 10px; font-size: 0.9rem;">
+                    הנקודות מתעדכנות אוטומטית עם כל התלמידים
+                </p>
             </div>
         </div>
         
@@ -441,7 +536,7 @@
             <!-- פקדי מורה -->
             <div class="quiz-box">
                 <h3 style="text-align: center; color: #ffca28; margin-bottom: 15px;">
-                    ניהול כיתה
+                    ניהול כיתה - ענן משותף
                 </h3>
                 
                 <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 15px 0;">
@@ -464,31 +559,30 @@
             
             <!-- לוח ניקוד למורה -->
             <div class="scoreboard">
-                <h3 style="text-align: center; color: #ffca28;">📊 לוח ניקוד - ניהול מורה</h3>
+                <h3 style="text-align: center; color: #ffca28;">📊 לוח ניקוד - ניהול מורה (משותף)</h3>
                 <div class="score-grid" id="teacherScoreboard"></div>
+                <p style="text-align: center; color: #81d4fa; margin-top: 10px; font-size: 0.9rem;">
+                    כל השינויים יראו לכל התלמידים והמורים
+                </p>
             </div>
         </div>
     </div>
 
     <script>
-        // יצירת כוכבים
-        function createStars() {
-            const stars = document.getElementById('stars');
-            stars.innerHTML = '';
-            
-            for (let i = 0; i < 100; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.width = Math.random() * 3 + 'px';
-                star.style.height = star.style.width;
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 5 + 's';
-                stars.appendChild(star);
-            }
-        }
+        // ================ הגדרות Firebase ================
+        // TODO: החלף בהגדרות שלך מ-Firebase Console!
+       const firebaseConfig = {
+  apiKey: "AIzaSyDpq2jXjY-QTfc_N5S4sqLs-NaRS7ow1vQ",
+  authDomain: "space-school-72807.firebaseapp.com",
+  databaseURL: "https://space-school-72807-default-rtdb.firebaseio.com",
+  projectId: "space-school-72807",
+  storageBucket: "space-school-72807.firebasestorage.app",
+  messagingSenderId: "919939980128",
+  appId: "1:919939980128:web:53c7b02240b9ac8347dc05",
+  measurementId: "G-JS216DC8X8"
+};
         
-        // נתוני המערכת
+        // ================ משתני מערכת ================
         const classes = ["ז1","ז2","ז3","ז4","ז5","ז6","ז7","ח1","ח2","ח3","ח4","ח5","ח6","ט1","ט2","ט3","ט4","ט5","ט6"];
         const TEACHER_PASS = "1957";
         
@@ -497,6 +591,8 @@
         let points = {};
         let currentQuestionIndex = 0;
         let quizActive = false;
+        let db = null;
+        let pointsRef = null;
         
         // שאלות החידון
         const questions = [
@@ -527,45 +623,138 @@
             }
         ];
         
-        // אתחול
-        function init() {
-            createStars();
+        // ================ פונקציות עזר ================
+        function createStars() {
+            const stars = document.getElementById('stars');
+            stars.innerHTML = '';
             
-            // טעינת נקודות
-            classes.forEach(cls => {
-                const saved = localStorage.getItem('points_' + cls);
-                points[cls] = saved ? parseInt(saved) : 0;
-            });
-            
-            // טעינת משתמש אחרון
-            const savedUser = localStorage.getItem('last_user');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                    if (currentUser.role === 'student') {
-                        showStudentScreen();
-                    } else {
-                        showTeacherScreen();
-                    }
-                } catch (e) {
-                    console.log('Error loading user');
-                }
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                stars.appendChild(star);
             }
-            
-            updateScoreboards();
         }
         
-        // בחירת תפקיד
+        function showNotification(message, type = 'info') {
+            alert(message); // אפשר להחליף ב-toast יפה יותר
+        }
+        
+        function updateConnectionStatus(connected) {
+            const statusEl = document.getElementById('connectionStatus');
+            statusEl.style.display = 'block';
+            
+            if (connected) {
+                statusEl.textContent = 'מחובר לענן ✅';
+                statusEl.className = 'connection-status connected';
+            } else {
+                statusEl.textContent = 'לא מחובר לענן ❌';
+                statusEl.className = 'connection-status disconnected';
+            }
+        }
+        
+        // ================ Firebase ================
+        async function initFirebase() {
+            try {
+                // אתחול Firebase
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.database();
+                
+                // בדיקת חיבור
+                const connectedRef = db.ref('.info/connected');
+                connectedRef.on('value', (snap) => {
+                    updateConnectionStatus(snap.val() === true);
+                });
+                
+                // הגדרת reference לנקודות
+                pointsRef = db.ref('points');
+                
+                // האזנה לשינויים בנקודות
+                pointsRef.on('value', (snapshot) => {
+                    const data = snapshot.val() || {};
+                    
+                    // עדכון הנקודות המקומיות
+                    classes.forEach(cls => {
+                        points[cls] = data[cls] || 0;
+                    });
+                    
+                    // עדכון המסכים אם הם פעילים
+                    if (currentUser) {
+                        if (currentUser.role === 'student') {
+                            updateScoreboard();
+                            updateStudentInfo();
+                        } else {
+                            updateTeacherScoreboard();
+                        }
+                    }
+                    
+                    // אנימציית עדכון
+                    highlightUpdatedClasses(data);
+                });
+                
+                // טעינת נקודות ראשונית
+                const snapshot = await pointsRef.once('value');
+                const data = snapshot.val() || {};
+                
+                classes.forEach(cls => {
+                    points[cls] = data[cls] || 0;
+                });
+                
+                return true;
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
+                showNotification('שגיאה בחיבור לענן. הנקודות ישמרו מקומית בלבד.', 'error');
+                return false;
+            }
+        }
+        
+        function highlightUpdatedClasses(newData) {
+            classes.forEach(cls => {
+                if (newData[cls] !== points[cls]) {
+                    const items = document.querySelectorAll(`.score-item .class-name:contains('${cls}')`);
+                    items.forEach(item => {
+                        const parent = item.closest('.score-item');
+                        if (parent) {
+                            parent.classList.add('updated');
+                            setTimeout(() => parent.classList.remove('updated'), 1000);
+                        }
+                    });
+                }
+            });
+        }
+        
+        async function updatePointsInFirebase() {
+            if (!pointsRef) {
+                console.log('No Firebase connection, saving locally');
+                // שמירה מקומית כגיבוי
+                classes.forEach(cls => {
+                    localStorage.setItem('points_' + cls, points[cls]);
+                });
+                return;
+            }
+            
+            try {
+                await pointsRef.set(points);
+                console.log('Points updated in Firebase');
+            } catch (error) {
+                console.error('Error updating points in Firebase:', error);
+                showNotification('שגיאה בשמירת נקודות לענן', 'error');
+            }
+        }
+        
+        // ================ ניהול מסכים ================
         function selectRole(role) {
             currentRole = role;
             
-            // עדכון כפתורים
             document.querySelectorAll('.role-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            // הצגת הטופס המתאים
             if (role === 'student') {
                 document.getElementById('studentForm').style.display = 'block';
                 document.getElementById('teacherForm').style.display = 'none';
@@ -575,7 +764,6 @@
             }
         }
         
-        // התחברות
         function login() {
             let name, className, password;
             
@@ -584,7 +772,7 @@
                 className = document.getElementById('studentClass').value;
                 
                 if (!name || !className) {
-                    alert('אנא מלאו את כל השדות');
+                    showNotification('אנא מלאו את כל השדות', 'error');
                     return;
                 }
             } else {
@@ -593,12 +781,12 @@
                 className = document.getElementById('teacherClass').value;
                 
                 if (!name || !password || !className) {
-                    alert('אנא מלאו את כל השדות');
+                    showNotification('אנא מלאו את כל השדות', 'error');
                     return;
                 }
                 
                 if (password !== TEACHER_PASS) {
-                    alert('סיסמה שגויה! הסיסמה הנכונה היא: 1957');
+                    showNotification('סיסמה שגויה! הסיסמה הנכונה היא: 1957', 'error');
                     return;
                 }
             }
@@ -610,50 +798,49 @@
                 loginTime: new Date().toISOString()
             };
             
-            // שמירה
             localStorage.setItem('last_user', JSON.stringify(currentUser));
             
-            // מעבר למסך
             if (currentRole === 'student') {
                 showStudentScreen();
-                alert('ברוך הבא! מוכנים לחידון?');
+                showNotification('ברוך הבא! הנקודות משותפות עם כל הכיתה!', 'success');
             } else {
                 showTeacherScreen();
-                alert('ברוך הבא מורה!');
+                showNotification('ברוך הבא מורה! השינויים שלך יראו לכולם.', 'success');
             }
         }
         
-        // הצגת מסך תלמיד
         function showStudentScreen() {
             showScreen('studentScreen');
             document.getElementById('logoutBtn').style.display = 'block';
             
-            // עדכון פרטים
-            document.getElementById('studentWelcome').textContent = `שלום ${currentUser.name}!`;
-            document.getElementById('studentInfo').textContent = `כיתה: ${currentUser.class} | נקודות: ${points[currentUser.class] || 0}`;
+            updateStudentInfo();
+            updateScoreboard();
             
-            // איפוס חידון
             document.getElementById('startQuiz').style.display = 'block';
             document.getElementById('quizActive').style.display = 'none';
             quizActive = false;
             currentQuestionIndex = 0;
-            
-            updateScoreboard();
         }
         
-        // הצגת מסך מורה
+        function updateStudentInfo() {
+            if (!currentUser) return;
+            
+            document.getElementById('studentWelcome').textContent = `שלום ${currentUser.name}!`;
+            document.getElementById('studentInfo').textContent = 
+                `כיתה: ${currentUser.class} | נקודות: ${points[currentUser.class] || 0} (משותף)`;
+        }
+        
         function showTeacherScreen() {
             showScreen('teacherScreen');
             document.getElementById('logoutBtn').style.display = 'block';
             
-            // עדכון פרטים
             document.getElementById('teacherWelcome').textContent = `מורה ${currentUser.name}`;
-            document.getElementById('teacherInfo').textContent = `כיתה: ${currentUser.class}`;
+            document.getElementById('teacherInfo').textContent = 
+                `כיתה: ${currentUser.class} | ניהול ענן משותף`;
             
             updateTeacherScoreboard();
         }
         
-        // החלפת מסכים
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
@@ -661,7 +848,6 @@
             document.getElementById(screenId).classList.add('active');
         }
         
-        // יציאה
         function logout() {
             if (confirm('לצאת מהמערכת?')) {
                 currentUser = null;
@@ -669,7 +855,6 @@
                 showScreen('loginScreen');
                 document.getElementById('logoutBtn').style.display = 'none';
                 
-                // ניקוי שדות
                 document.getElementById('studentName').value = '';
                 document.getElementById('studentClass').value = '';
                 document.getElementById('teacherName').value = '';
@@ -678,7 +863,7 @@
             }
         }
         
-        // התחלת חידון
+        // ================ חידון ================
         function startQuiz() {
             document.getElementById('startQuiz').style.display = 'none';
             document.getElementById('quizActive').style.display = 'block';
@@ -687,7 +872,6 @@
             showQuestion();
         }
         
-        // הצגת שאלה
         function showQuestion() {
             if (currentQuestionIndex >= questions.length) {
                 endQuiz();
@@ -712,7 +896,6 @@
             document.getElementById('nextBtn').style.display = 'none';
         }
         
-        // בדיקת תשובה
         function checkAnswer(answerIndex) {
             const q = questions[currentQuestionIndex];
             const feedback = document.getElementById('feedback');
@@ -721,7 +904,6 @@
             // חסימת כפתורים
             document.querySelectorAll('.answer-btn').forEach(btn => {
                 btn.disabled = true;
-                btn.style.opacity = '0.7';
             });
             
             if (answerIndex === q.correct) {
@@ -730,9 +912,12 @@
                 feedback.style.border = '2px solid #4CAF50';
                 feedback.style.color = '#4CAF50';
                 
-                // הוספת נקודה
-                points[className]++;
-                localStorage.setItem('points_' + className, points[className]);
+                // הוספת נקודה בענן
+                points[className] = (points[className] || 0) + 1;
+                updatePointsInFirebase();
+                
+                // עדכון מיידי
+                updateStudentInfo();
                 updateScoreboard();
             } else {
                 feedback.innerHTML = `❌ <strong>לא נכון.</strong> התשובה הנכונה: ${q.answers[q.correct]}`;
@@ -745,7 +930,6 @@
             document.getElementById('nextBtn').style.display = 'block';
         }
         
-        // שאלה הבאה
         function nextQuestion() {
             currentQuestionIndex++;
             if (currentQuestionIndex < questions.length) {
@@ -755,17 +939,18 @@
             }
         }
         
-        // סיום חידון
         function endQuiz() {
-            alert(`כל הכבוד! סיימתם את החידון!\nכיתה ${currentUser.class} צברה ${points[currentUser.class]} נקודות`);
+            showNotification(`כל הכבוד! סיימתם את החידון!\nכיתה ${currentUser.class} צברה ${points[currentUser.class]} נקודות`);
             document.getElementById('startQuiz').style.display = 'block';
             document.getElementById('quizActive').style.display = 'none';
             quizActive = false;
         }
         
-        // עדכון לוח ניקוד תלמיד
+        // ================ לוחות ניקוד ================
         function updateScoreboard() {
             const board = document.getElementById('scoreboard');
+            if (!board) return;
+            
             board.innerHTML = '';
             
             classes.forEach(cls => {
@@ -782,110 +967,12 @@
             });
         }
         
-        // עדכון לוח ניקוד מורה
         function updateTeacherScoreboard() {
             const board = document.getElementById('teacherScoreboard');
+            if (!board) return;
+            
             board.innerHTML = '';
             
             classes.forEach(cls => {
                 const item = document.createElement('div');
-                item.className = 'score-item';
-                if (cls === currentUser?.class) {
-                    item.style.background = 'rgba(255, 202, 40, 0.3)';
-                    item.style.border = '2px solid #ffca28';
-                }
-                item.innerHTML = `
-                    <div class="class-name">${cls}</div>
-                    <div class="points">${points[cls] || 0}</div>
-                `;
-                board.appendChild(item);
-            });
-        }
-        
-        // עדכון שניהם
-        function updateScoreboards() {
-            updateScoreboard();
-            updateTeacherScoreboard();
-        }
-        
-        // הוספת נקודות (מורה)
-        function addPoints(num) {
-            if (!currentUser || currentUser.role !== 'teacher') return;
-            
-            const className = currentUser.class;
-            points[className] += num;
-            localStorage.setItem('points_' + className, points[className]);
-            updateTeacherScoreboard();
-            alert(`הוספת ${num} נקודות לכיתה ${className}`);
-        }
-        
-        // הוספת נקודות מותאמת
-        function addCustomPoints() {
-            const input = document.getElementById('customPoints');
-            const num = parseInt(input.value);
-            
-            if (isNaN(num) || num < 1) {
-                alert('אנא הכנס מספר תקין');
-                return;
-            }
-            
-            addPoints(num);
-            input.value = '';
-        }
-        
-        // איפוס נקודות כיתה
-        function resetClassPoints() {
-            if (!currentUser || currentUser.role !== 'teacher') return;
-            
-            if (confirm(`לאפס את הנקודות של כיתה ${currentUser.class}?`)) {
-                const className = currentUser.class;
-                points[className] = 0;
-                localStorage.setItem('points_' + className, 0);
-                updateTeacherScoreboard();
-                alert('נקודות כיתה אופסו');
-            }
-        }
-        
-        // איפוס כל הנקודות
-        function resetAllPoints() {
-            if (!currentUser || currentUser.role !== 'teacher') return;
-            
-            if (confirm('⚠️ לאפס את כל הנקודות בכל הכיתות?\nלא ניתן לבטל פעולה זו!')) {
-                classes.forEach(cls => {
-                    points[cls] = 0;
-                    localStorage.setItem('points_' + cls, 0);
-                });
-                updateTeacherScoreboard();
-                alert('כל הנקודות אופסו');
-            }
-        }
-        
-              // Import the functions you need from the SDKs you need
-              import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-              import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
-              // TODO: Add SDKs for Firebase products that you want to use
-              // https://firebase.google.com/docs/web/setup#available-libraries
-
-              // Your web app's Firebase configuration
-              // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-          const firebaseConfig = {
-            apiKey: "AIzaSyDpq2jXjY-QTfc_N5S4sqLs-NaRS7ow1vQ",
-            authDomain: "space-school-72807.firebaseapp.com",
-            databaseURL: "https://space-school-72807-default-rtdb.firebaseio.com",
-            projectId: "space-school-72807",
-            storageBucket: "space-school-72807.firebasestorage.app",
-            messagingSenderId: "919939980128",
-            appId: "1:919939980128:web:53c7b02240b9ac8347dc05",
-            measurementId: "G-JS216DC8X8"
-      };
-
-          // Initialize Firebase
-          const app = initializeApp(firebaseConfig);
-          const analytics = getAnalytics(app);   
-   
-        // הפעלה ראשונית
-        window.onload = init;
-    </script>
-</body>
-</html>
-
+                item.className
