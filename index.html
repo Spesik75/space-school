@@ -1,748 +1,198 @@
-Edit
-
-Preview
- @@ -1,18 +1,932 @@
- <!DOCTYPE html>
-<html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
- <head>
-  <title>Space School</title>
+<head>
     <meta charset="UTF-8">
-  <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Quiz - חידון חלל בית ספרי</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>חידון חלל - בית ספר</title>
     <style>
-        /* Reset ומבנה בסיסי */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            font-family: 'Segoe UI', 'Arial Hebre
-        /* Reset ומבנה בסיסי */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            font-family: 'Segoe UI', 'Arial Hebrew', sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3d 50%, #2d2b5e 100%);
-            color: white;
-            min-height: 100vh;
-            padding: 0;
-        }
-        
-        /* אנימציות וכוכבים */
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-        
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 3s infinite;
-        }
-        
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 1; }
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        /* קונטיינר ראשי */
-        .main-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 15px;
-            width: 100%;
-        }
-        
-        /* כותרות */
-        .main-header {
-            text-align: center;
-            padding: 20px 10px;
-            margin-bottom: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
-            border: 2px solid #4fc3f7;
-            box-shadow: 0 0 20px rgba(79, 195, 247, 0.3);
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        .main-title {
-            font-size: 2.2rem;
-            color: #4fc3f7;
-            text-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            color: #ffca28;
-        }
-        
-        /* מסכים */
-        .screen {
-            display: none;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(79, 195, 247, 0.3);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .screen.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* כפתורי בחירת תפקיד */
-        .role-selector {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 25px 0;
-            flex-wrap: wrap;
-        }
-        
-        .role-btn {
-            flex: 1;
-            min-width: 150px;
-            padding: 20px 15px;
-            background: linear-gradient(145deg, rgba(30, 30, 60, 0.8), rgba(50, 50, 90, 0.8));
-            border: 2px solid transparent;
-            border-radius: 12px;
-            color: white;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-        
-        .role-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .role-btn.active {
-            background: linear-gradient(145deg, #4fc3f7, #29b6f6);
-            color: black;
-            border-color: #4fc3f7;
-        }
-        
-        .role-btn i {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            display: block;
-        }
-        
-        /* שדות קלט */
-        .input-group {
-            margin: 20px 0;
-            text-align: right;
-        }
-        
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #ffca28;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-        
-        .input-group input,
-        .input-group select {
-            width: 100%;
-            padding: 14px;
-            font-size: 1rem;
-            border-radius: 10px;
-            border: 2px solid #4fc3f7;
-            background: rgba(17, 17, 17, 0.9);
-            color: white;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .input-group input:focus,
-        .input-group select:focus {
-            outline: none;
-            border-color: #ffca28;
-            box-shadow: 0 0 10px rgba(255, 202, 40, 0.5);
-        }
-        
-        /* כפתורים כלליים */
-        .btn {
-            padding: 14px 28px;
-            font-size: 1.1rem;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin: 10px;
-            min-width: 160px;
-        }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 7px 14px rgba(0, 0, 0, 0.3);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(145deg, #4fc3f7, #29b6f6);
-            color: black;
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(145deg, #ffca28, #ffb300);
-            color: black;
-        }
-        
-        .btn-danger {
-            background: linear-gradient(145deg, #f44336, #d32f2f);
-            color: white;
-        }
-        
-        .btn-success {
-            background: linear-gradient(145deg, #4CAF50, #2E7D32);
-            color: white;
-        }
-        
-        /* חידון */
-        .quiz-container {
-            background: rgba(30, 30, 60, 0.8);
-            padding: 25px;
-            border-radius: 15px;
-            margin: 20px 0;
-            border: 1px solid #4fc3f7;
-        }
-        
-        .question-box {
-            background: rgba(20, 20, 40, 0.9);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-        }
-        
-        .question-text {
-            font-size: 1.4rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            color: #fff;
-        }
-        
-        .answers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .answer-btn {
-            padding: 18px;
-            background: linear-gradient(145deg, #1a237e, #283593);
-            border: none;
-            border-radius: 10px;
-            color: white;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-        
-        .answer-btn:hover {
-            background: linear-gradient(145deg, #283593, #3949ab);
-            transform: translateY(-3px);
-        }
-        
-        .answer-btn.correct {
-            background: linear-gradient(145deg, #1b5e20, #2e7d32);
-            animation: pulse 0.5s;
-        }
-        
-        .answer-btn.wrong {
-            background: linear-gradient(145deg, #b71c1c, #c62828);
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        /* לוח ניקוד */
-        .scoreboard-section {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 15px;
-            margin: 25px 0;
-            border: 2px solid #ffca28;
-        }
-        
-        .scoreboard-title {
-            text-align: center;
-            color: #ffca28;
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-        }
-        
-        .score-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 12px;
-            margin-top: 20px;
-        }
-        
-        .score-item {
-            background: rgba(30, 30, 60, 0.8);
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #4fc3f7;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .score-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(79, 195, 247, 0.3);
-        }
-        
-        .score-item.highlight {
-            background: rgba(255, 202, 40, 0.1);
-            border: 2px solid #ffca28;
-        }
-        
-        .class-name {
-            font-weight: bold;
-            color: #ffca28;
-            font-size: 1.3rem;
-            margin-bottom: 5px;
-        }
-        
-        .class-points {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #4fc3f7;
-        }
-        
-        .teacher-controls {
-            margin-top: 10px;
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-        }
-        
-        .small-btn {
-            padding: 6px 12px;
-            font-size: 0.9rem;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            background: #ffca28;
-            color: black;
-        }
-        
-        /* התאמה למובייל */
-        @media (max-width: 768px) {
-            .main-container {
-                padding: 10px;
-            }
-            
-            .main-title {
-                font-size: 1.8rem;
-            }
-            
-            .role-selector {
-                flex-direction: column;
-            }
-            
-            .role-btn {
-                width: 100%;
-            }
-            
-            .answers-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .score-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .btn {
-                width: 100%;
-                margin: 10px 0;
-            }
-            
-            .screen {
-                padding: 20px 15px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .main-title {
-                font-size: 1.5rem;
-            }
-            
-            .score-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .question-text {
-                font-size: 1.2rem;
-            }
-            
-            .answer-btn {
-                padding: 15px;
-                font-size: 1rem;
-            }
-        }
-        
-        /* הודעות וסטטוס */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.9);
-            border-left: 5px solid #4fc3f7;
-            z-index: 1000;
-            animation: slideIn 0.3s ease;
-            max-width: 350px;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4fc3f7, #29b6f6);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-        
-        /* כרטיסי מידע */
-        .info-card {
-            background: rgba(30, 30, 60, 0.8);
-            padding: 20px;
-            border-radius: 12px;
-            margin: 15px 0;
-            border: 1px solid rgba(79, 195, 247, 0.3);
-        }
-        
-        /* כפתור יציאה */
-        .logout-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: 1px solid #ffca28;
-            border-radius: 8px;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        
-        /* טעינה */
-        .loader {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #4fc3f7;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); color: white; min-height: 100vh; padding: 20px; text-align: center; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        header { margin-bottom: 30px; padding: 20px; background: rgba(0,0,0,0.5); border-radius: 15px; border: 2px solid #4fc3f7; box-shadow: 0 0 20px rgba(79,195,247,0.3); }
+        h1 { color: #4fc3f7; font-size: 2.5em; margin-bottom: 10px; text-shadow: 0 0 10px rgba(79,195,247,0.5); }
+        h2 { color: #ffca28; margin: 20px 0; font-size: 1.8em; }
+        h3 { color: #81d4fa; margin: 15px 0; }
+        .login-container { background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 500px; border: 2px solid #ffca28; }
+        .role-selector { display: flex; justify-content: center; gap: 20px; margin: 20px 0; }
+        .role-btn { padding: 15px 30px; font-size: 18px; border-radius: 10px; border: 2px solid transparent; background: rgba(30,30,60,0.8); color: white; cursor: pointer; transition: all 0.3s ease; font-weight: bold; }
+        .role-btn.active { background: linear-gradient(145deg, #4fc3f7, #29b6f6); color: black; border-color: #4fc3f7; }
+        .role-btn:hover { transform: translateY(-2px); }
+        .input-group { margin: 20px 0; text-align: right; }
+        label { display: block; margin-bottom: 8px; color: #ffca28; font-weight: bold; }
+        input, select { width: 100%; padding: 12px; font-size: 16px; border-radius: 10px; border: 2px solid #4fc3f7; background: #111; color: white; text-align: center; }
+        .password-note { font-size: 14px; color: #81d4fa; margin-top: 10px; font-style: italic; }
+        .class-selector { background: rgba(0,0,0,0.7); padding: 20px; border-radius: 15px; margin: 20px auto; max-width: 500px; }
+        .quiz-container { background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px; margin: 20px auto; min-height: 400px; display: flex; flex-direction: column; justify-content: center; }
+        .question-box { background: rgba(30,30,60,0.8); padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #4fc3f7; }
+        .question-text { font-size: 1.5em; margin-bottom: 25px; line-height: 1.5; color: #fff; }
+        .answers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        @media (max-width: 768px) { .answers-grid { grid-template-columns: 1fr; } }
+        .answer-btn { padding: 15px; font-size: 16px; border-radius: 10px; border: none; background: linear-gradient(145deg, #1a237e, #283593); color: white; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
+        .answer-btn:hover { background: linear-gradient(145deg, #283593, #3949ab); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .answer-btn.correct { background: linear-gradient(145deg, #1b5e20, #2e7d32); border-color: #4caf50; }
+        .answer-btn.wrong { background: linear-gradient(145deg, #b71c1c, #c62828); border-color: #f44336; }
+        .scoreboard { background: rgba(0,0,0,0.7); padding: 20px; border-radius: 15px; margin-top: 30px; border: 2px solid #ffca28; }
+        .score-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 20px; }
+        .score-item { background: rgba(30,30,60,0.8); padding: 10px; border-radius: 8px; border: 1px solid #4fc3f7; position: relative; }
+        .class-name { font-weight: bold; color: #ffca28; }
+        .class-points { font-size: 1.2em; font-weight: bold; color: #4fc3f7; }
+        .teacher-controls { margin-top: 10px; display: flex; gap: 5px; justify-content: center; }
+        .teacher-btn { padding: 5px 10px; font-size: 12px; border-radius: 5px; border: none; cursor: pointer; background: #ffca28; color: black; font-weight: bold; }
+        .controls { margin: 20px 0; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        button { padding: 12px 25px; font-size: 16px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; transition: all 0.3s ease; }
+        #loginBtn, #startBtn, #nextBtn { background: linear-gradient(145deg, #4fc3f7, #29b6f6); color: black; }
+        #logoutBtn, #resetBtn { background: linear-gradient(145deg, #ffca28, #ffb300); color: black; }
+        .logout-section { position: absolute; top: 20px; left: 20px; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .progress { margin: 20px 0; font-size: 18px; color: #ffca28; }
+        .feedback { margin-top: 20px; padding: 15px; border-radius: 10px; font-size: 1.2em; font-weight: bold; display: none; }
+        .correct-feedback { background: rgba(76,175,80,0.2); border: 2px solid #4caf50; color: #4caf50; }
+        .wrong-feedback { background: rgba(244,67,54,0.2); border: 2px solid #f44336; color: #f44336; }
+        .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 5s infinite; }
+        @keyframes twinkle { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+        .hidden { display: none; }
+        .teacher-menu { background: rgba(0,0,0,0.7); padding: 20px; border-radius: 15px; margin: 20px auto; max-width: 600px; border: 2px solid #ffca28; }
+        .admin-controls { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
+        .admin-panel { background: rgba(30,30,60,0.8); padding: 15px; border-radius: 10px; }
+        .admin-btn { margin: 5px; padding: 8px 15px; background: linear-gradient(145deg, #4fc3f7, #29b6f6); color: black; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .point-control { display: flex; align-items: center; gap: 10px; margin: 10px 0; justify-content: center; }
+        .point-input { width: 80px; padding: 8px; text-align: center; }
     </style>
 </head>
 <body>
-    <!-- כוכבים ברקע -->
     <div class="stars" id="stars"></div>
-    
-    <!-- כפתור יציאה -->
-    <button class="logout-btn" onclick="logout()" style="display: none;" id="logoutBtn">
-        <i class="fas fa-sign-out-alt"></i> יציאה
-    </button>
-    
-    <!-- קונטיינר ראשי -->
-    <div class="main-container">
-        <!-- מסך התחברות ראשי -->
-        <div class="screen active" id="loginScreen">
-            <div class="main-header">
-                <h1 class="main-title"><i class="fas fa-rocket"></i> חידון חלל בית ספרי</h1>
-                <p class="subtitle">ענו על שאלות חלל וצברו נקודות לכיתה שלכם!</p>
-            </div>
-            
-            <div class="info-card">
-                <h3 style="text-align: center; color: #4fc3f7; margin-bottom: 15px;">
-                    <i class="fas fa-user-graduate"></i> בחרו את סוג המשתמש שלכם:
-                </h3>
-                
+    <div class="container">
+        <div id="loginScreen">
+            <header>
+                <h1>🚀 חידון חלל - בית ספר</h1>
+                <p>מערכת ניהול כיתות - הרשמה</p>
+            </header>
+            <div class="login-container">
+                <h2>התחברות למערכת</h2>
                 <div class="role-selector">
-                    <button class="role-btn active" onclick="selectRole('student')">
-                        <i class="fas fa-user-graduate"></i>
-                        <span>תלמיד/ה</span>
-                        <small style="display: block; margin-top: 5px; font-size: 0.9rem; color: #aaa;">
-                            משחק בחידון וצבירת נקודות
-                        </small>
-                    </button>
-                    
-                    <button class="role-btn" onclick="selectRole('teacher')">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                        <span>מורה</span>
-                        <small style="display: block; margin-top: 5px; font-size: 0.9rem; color: #aaa;">
-                            ניהול נקודות והתאמות
-                        </small>
-                    </button>
+                    <button class="role-btn active" onclick="selectRole('student')">תלמיד/ה</button>
+                    <button class="role-btn" onclick="selectRole('teacher')">מורה</button>
                 </div>
-            </div>
-            
-            <div class="screen active" id="studentLoginForm">
-                <h3 style="text-align: center; color: #ffca28; margin-bottom: 20px;">
-                    <i class="fas fa-sign-in-alt"></i> התחברות תלמיד/ה
-                </h3>
-                
                 <div class="input-group">
-                    <label for="studentName"><i class="fas fa-user"></i> שם מלא:</label>
-                    <input type="text" id="studentName" placeholder="הכניסו את שמכם המלא">
+                    <label for="userName">שם מלא:</label>
+                    <input type="text" id="userName" placeholder="הכניסו את שמכם">
                 </div>
-                
+                <div class="input-group" id="passwordGroup" style="display: none;">
+                    <label for="password">סיסמת מורה:</label>
+                    <input type="password" id="password" placeholder="הכניסו סיסמה">
+
+                </div>
                 <div class="input-group">
-                    <label for="studentClass"><i class="fas fa-users"></i> בחרו כיתה:</label>
-                    <select id="studentClass">
+                    <label for="loginClass">בחרו כיתה:</label>
+                    <select id="loginClass">
                         <option value="">-- בחרו כיתה --</option>
-                        <option value="ז1">ז1</option><option value="ז2">ז2</option>
-                        <option value="ז3">ז3</option><option value="ז4">ז4</option>
-                        <option value="ז5">ז5</option><option value="ז6">ז6</option>
-                        <option value="ז7">ז7</option><option value="ח1">ח1</option>
-                        <option value="ח2">ח2</option><option value="ח3">ח3</option>
-                        <option value="ח4">ח4</option><option value="ח5">ח5</option>
-                        <option value="ח6">ח6</option><option value="ט1">ט1</option>
-                        <option value="ט2">ט2</option><option value="ט3">ט3</option>
-                        <option value="ט4">ט4</option><option value="ט5">ט5</option>
+                        <option value="ז1">ז1</option><option value="ז2">ז2</option><option value="ז3">ז3</option>
+                        <option value="ז4">ז4</option><option value="ז5">ז5</option><option value="ז6">ז6</option>
+                        <option value="ז7">ז7</option><option value="ח1">ח1</option><option value="ח2">ח2</option>
+                        <option value="ח3">ח3</option><option value="ח4">ח4</option><option value="ח5">ח5</option>
+                        <option value="ח6">ח6</option><option value="ט1">ט1</option><option value="ט2">ט2</option>
+                        <option value="ט3">ט3</option><option value="ט4">ט4</option><option value="ט5">ט5</option>
                         <option value="ט6">ט6</option>
                     </select>
                 </div>
-                
-                <div style="text-align: center; margin: 25px 0;">
-                    <button class="btn btn-primary" onclick="loginUser()">
-                        <i class="fas fa-play"></i> התחל חידון
-                    </button>
-                </div>
-            </div>
-            
-            <div class="screen" id="teacherLoginForm" style="display: none;">
-                <h3 style="text-align: center; color: #ffca28; margin-bottom: 20px;">
-                    <i class="fas fa-chalkboard-teacher"></i> התחברות מורה
-                </h3>
-                
-                <div class="input-group">
-                    <label for="teacherName"><i class="fas fa-user-tie"></i> שם המורה:</label>
-                    <input type="text" id="teacherName" placeholder="הכניסו את שמכם המלא">
-                </div>
-                
-                <div class="input-group">
-                    <label for="teacherPassword"><i class="fas fa-key"></i> סיסמת מורה:</label>
-                    <input type="password" id="teacherPassword" placeholder="הכניסו את הסיסמה">
-                    <small style="color: #81d4fa; display: block; margin-top: 5px;">
-                        <i class="fas fa-info-circle"></i> 
-                </div>
-                
-                <div class="input-group">
-                    <label for="teacherClass"><i class="fas fa-school"></i> כיתה שלכם:</label>
-                    <select id="teacherClass">
-                        <option value="">-- בחרו כיתה --</option>
-                        <option value="ז1">ז1</option><option value="ז2">ז2</option>
-                        <option value="ז3">ז3</option><option value="ז4">ז4</option>
-                        <option value="ז5">ז5</option><option value="ז6">ז6</option>
-                        <option value="ז7">ז7</option><option value="ח1">ח1</option>
-                        <option value="ח2">ח2</option><option value="ח3">ח3</option>
-                        <option value="ח4">ח4</option><option value="ח5">ח5</option>
-                        <option value="ח6">ח6</option><option value="ט1">ט1</option>
-                        <option value="ט2">ט2</option><option value="ט3">ט3</option>
-                        <option value="ט4">ט4</option><option value="ט5">ט5</option>
-                        <option value="ט6">ט6</option>
-                    </select>
-                </div>
-                
-                <div style="text-align: center; margin: 25px 0;">
-                    <button class="btn btn-secondary" onclick="loginUser()">
-                        <i class="fas fa-sign-in-alt"></i> כניסה למערכת
-                    </button>
+                <div class="controls">
+                    <button id="loginBtn" onclick="login()">כניסה למערכת</button>
                 </div>
             </div>
         </div>
-        
-        <!-- מסך תלמיד -->
-        <div class="screen" id="studentScreen">
-            <div class="main-header">
-                <h2 id="studentWelcome"></h2>
-                <p class="subtitle" id="studentInfo"></p>
+        <div id="studentScreen" class="hidden">
+            <div class="logout-section">
+                <button id="logoutBtn" onclick="logout()">יציאה</button>
             </div>
-            
-            <div id="quizContainer">
-                <div class="quiz-container" id="startQuizScreen">
-                    <h3 style="text-align: center; color: #4fc3f7; margin-bottom: 20px;">
-                        <i class="fas fa-gamepad"></i> הוראות חידון
-                    </h3>
-                    
-                    <div class="info-card">
-                        <p><i class="fas fa-check-circle" style="color: #4CAF50;"></i> 50 שאלות חלל מרתקות</p>
-                        <p><i class="fas fa-star" style="color: #FFC107;"></i> 4 תשובות אפשריות לכל שאלה</p>
-                        <p><i class="fas fa-trophy" style="color: #FF9800;"></i> תשובה נכונה = נקודה לכיתה!</p>
-                        <p><i class="fas fa-clock" style="color: #2196F3;"></i> אין הגבלת זמן</p>
-                    </div>
-                    
-                    <div style="text-align: center; margin: 30px 0;">
-                        <button class="btn btn-primary" onclick="startQuiz()" style="font-size: 1.3rem; padding: 18px 40px;">
-                            <i class="fas fa-play-circle"></i> התחל חידון
-                        </button>
+            <header>
+                <h1>🚀 חידון חלל - בית ספר</h1>
+                <p id="studentWelcome">ברוכים הבאים!</p>
+            </header>
+            <div class="class-selector">
+                <h2>שלום <span id="studentName"></span>!</h2>
+                <p>אתם מכיתה: <span id="studentClass" style="font-weight: bold; color: #ffca28;"></span></p>
+            </div>
+            <div class="quiz-container">
+                <div id="startScreen">
+                    <h2>ברוכים הבאים לחידון החלל!</h2>
+                    <p>לחצו על "התחל חידון" כדי להתחיל</p>
+                    <p>יש 50 שאלות חלל מעניינות עם 4 תשובות לכל שאלה</p>
+                    <p>לכל תשובה נכונה - הכיתה מקבלת נקודה!</p>
+                    <div class="controls">
+                        <button id="startBtn" onclick="startQuiz()">התחל חידון</button>
                     </div>
                 </div>
-                
-                <div class="quiz-container" id="quizScreen" style="display: none;">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="quizProgress"></div>
-                    </div>
-                    
+                <div id="quizScreen" style="display: none;">
                     <div class="question-box">
-                        <h4 style="color: #81d4fa; margin-bottom: 10px;">
-                            שאלה <span id="currentQuestionNum">1</span> מתוך 50
-                        </h4>
                         <div class="question-text" id="questionText"></div>
-                        
                         <div class="answers-grid" id="answersContainer"></div>
                     </div>
-                    
-                    <div id="feedback" style="display: none; text-align: center; padding: 20px; border-radius: 10px; margin: 20px 0; font-size: 1.2rem;"></div>
-                    
-                    <div style="text-align: center; margin-top: 25px;">
-                        <button class="btn btn-secondary" id="nextBtn" onclick="nextQuestion()" style="display: none;">
-                            <i class="fas fa-arrow-right"></i> שאלה הבאה
-                        </button>
+                    <div class="progress">
+                        שאלה <span id="currentQuestion">1</span> מתוך 50
+                    </div>
+                    <div class="feedback" id="feedback"></div>
+                    <div class="controls">
+                        <button id="nextBtn" onclick="nextQuestion()" style="display: none;">שאלה הבאה</button>
                     </div>
                 </div>
             </div>
-            
-            <div class="scoreboard-section">
-                <h3 class="scoreboard-title"><i class="fas fa-trophy"></i> לוח ניקוד כיתות</h3>
+            <div class="scoreboard">
+                <h2>🏆 לוח ניקוד כיתות</h2>
                 <div class="score-grid" id="scoreboard"></div>
             </div>
         </div>
-        
-        <!-- מסך מורה -->
-        <div class="screen" id="teacherScreen">
-            <div class="main-header">
-                <h2 id="teacherWelcome"></h2>
-                <p class="subtitle" id="teacherInfo"></p>
+        <div id="teacherScreen" class="hidden">
+            <div class="logout-section">
+                <button id="logoutBtnTeacher" onclick="logout()">יציאה</button>
             </div>
-            
-            <div class="info-card">
-                <h3 style="text-align: center; color: #ffca28; margin-bottom: 20px;">
-                    <i class="fas fa-cogs"></i> פקדי ניהול
-                </h3>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
-                    <button class="btn btn-secondary" onclick="addPoints(1)">
-                        <i class="fas fa-plus-circle"></i> +1 נקודה
-                    </button>
-                    <button class="btn btn-secondary" onclick="addPoints(5)">
-                        <i class="fas fa-plus-circle"></i> +5 נקודות
-                    </button>
-                    <button class="btn btn-secondary" onclick="addPoints(10)">
-                        <i class="fas fa-plus-circle"></i> +10 נקודות
-                    </button>
-                </div>
-                
-                <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 20px 0;">
-                    <input type="number" id="customPoints" placeholder="מספר נקודות" min="1" max="100" 
-                           style="padding: 12px; border-radius: 8px; border: 2px solid #4fc3f7; background: rgba(17,17,17,0.9); color: white; width: 150px; text-align: center;">
-                    <button class="btn btn-success" onclick="addCustomPoints()">
-                        <i class="fas fa-check"></i> הוסף נקודות
-                    </button>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
-                    <button class="btn btn-danger" onclick="resetClassPoints()">
-                        <i class="fas fa-redo"></i> אפס כיתה שלי
-                    </button>
-                    <button class="btn btn-danger" onclick="resetAllPoints()">
-                        <i class="fas fa-trash-alt"></i> אפס הכל
-                    </button>
+            <header>
+                <h1>🚀 חידון חלל - מערכת מורים</h1>
+                <p id="teacherWelcome">ברוכים הבאים!</p>
+            </header>
+            <div class="teacher-menu">
+                <h2>שלום <span id="teacherName"></span>!</h2>
+                <p>אתם מורה של כיתה: <span id="teacherClass" style="font-weight: bold; color: #ffca28;"></span></p>
+                <p style="color: #81d4fa; margin-top: 10px;">כאן תוכלו לנהל את הנקודות של הכיתה שלכם</p>
+            </div>
+            <div class="teacher-menu">
+                <h3>ניהול נקודות כיתה</h3>
+                <div class="admin-controls">
+                    <div class="admin-panel">
+                        <h4>הוספת נקודות</h4>
+                        <div class="point-control">
+                            <button class="admin-btn" onclick="addPointsToClass(1)">+1 נקודה</button>
+                            <button class="admin-btn" onclick="addPointsToClass(5)">+5 נקודות</button>
+                            <button class="admin-btn" onclick="addPointsToClass(10)">+10 נקודות</button>
+                        </div>
+                        <input type="number" id="customPoints" class="point-input" placeholder="מספר" min="1" max="100">
+                        <button class="admin-btn" onclick="addCustomPoints()">הוסף נקודות</button>
+                    </div>
+                    <div class="admin-panel">
+                        <h4>ניהול נקודות</h4>
+                        <button class="admin-btn" onclick="resetClassPoints()">אפס נקודות לכיתה שלי</button>
+                        <button class="admin-btn" onclick="showAllPoints()">הצג נקודות כל הכיתות</button>
+                    </div>
                 </div>
             </div>
-            
-            <div class="scoreboard-section">
-                <h3 class="scoreboard-title"><i class="fas fa-chart-bar"></i> לוח ניקוד - ניהול מורה</h3>
+            <div class="scoreboard">
+                <h2>🏆 לוח ניקוד כיתות - ניהול מורה</h2>
                 <div class="score-grid" id="teacherScoreboard"></div>
+            </div>
+            <div class="teacher-menu">
+                <h3>מצב חידון</h3>
+                <p>התלמידים יכולים כעת להשתתף בחידון ולצבור נקודות לכיתה.</p>
+                <div class="controls">
+                    <button onclick="resetAllPoints()" style="background: linear-gradient(145deg, #f44336, #d32f2f);">אפס את כל הנקודות במערכת</button>
+                </div>
+                <p style="color: #ff9800; font-size: 14px; margin-top: 10px;">⚠️ שימו לב: איפוס כל הנקודות יפעל על כל הכיתות ולא ניתן לשחזר!</p>
             </div>
         </div>
     </div>
-    
-    <!-- סקריפטים -->
     <script>
-        // יצירת כוכבים ברקע
         function createStars() {
             const starsContainer = document.getElementById('stars');
-            starsContainer.innerHTML = '';
-            
-            for (let i = 0; i < 150; i++) {
+            for (let i = 0; i < 100; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
                 star.style.width = Math.random() * 3 + 'px';
@@ -750,202 +200,231 @@ Preview
                 star.style.left = Math.random() * 100 + '%';
                 star.style.top = Math.random() * 100 + '%';
                 star.style.animationDelay = Math.random() * 5 + 's';
-                star.style.opacity = Math.random() * 0.5 + 0.2;
                 starsContainer.appendChild(star);
             }
         }
-        
-        // נתוני המערכת
         const classes = ["ז1","ז2","ז3","ז4","ז5","ז6","ז7","ח1","ח2","ח3","ח4","ח5","ח6","ט1","ט2","ט3","ט4","ט5","ט6"];
         let currentUser = null;
         let currentRole = 'student';
-        let points = {};
-        const TEACHER_PASSWORD = "1957";
+        let classPoints = {};
+        let teacherPassword = "1957";
+        const questions = [
+            {question: "איזה כוכב לכת נקרא 'כוכב הלכת האדום'?", answers: ["נוגה","מאדים","צדק","שבתאי"], correct: 1},
+            {question: "מהו כוכב הלכת הגדול ביותר במערכת השמש?", answers: ["כדור הארץ","שבתאי","צדק","נפטון"], correct: 2},
+            {question: "מי היה האדם הראשון שצעד על הירח?", answers: ["יורי גגארין","באז אולדרין","ניל ארמסטרונג","מייקל קולינס"], correct: 2},
+            {question: "מה שמה של הגלקסיה שלנו?", answers: ["אנדרומדה","שביל החלב","גלקסיית הסומבררו","גלקסיית המערבולת"], correct: 1},
+            {question: "איזה כוכב לכת ידוע בטבעותיו המרהיבות?", answers: ["צדק","נפטון","אורנוס","שבתאי"], correct: 3}
+        ];
         let currentQuestionIndex = 0;
         let quizActive = false;
-        
-        // שאלות החידון (ניתן להוסיף עוד)
-        const questions = [
-            {
-                question: "איזה כוכב לכת נקרא 'כוכב הלכת האדום'?",
-                answers: ["נוגה", "מאדים", "צדק", "שבתאי"],
-                correct: 1
-            },
-            {
-                question: "מהו כוכב הלכת הגדול ביותר במערכת השמש?",
-                answers: ["כדור הארץ", "שבתאי", "צדק", "נפטון"],
-                correct: 2
-            },
-            {
-                question: "מי היה האדם הראשון שצעד על הירח?",
-                answers: ["יורי גגארין", "באז אולדרין", "ניל ארמסטרונג", "מייקל קולינס"],
-                correct: 2
-            },
-            {
-                question: "מה שמה של הגלקסיה שלנו?",
-                answers: ["אנדרומדה", "שביל החלב", "גלקסיית הסומבררו", "גלקסיית המערבולת"],
-                correct: 1
-            },
-            {
-                question: "איזה כוכב לכת ידוע בטבעותיו המרהיבות?",
-                answers: ["צדק", "נפטון", "אורנוס", "שבתאי"],
-                correct: 3
-            },
-            {
-                question: "איזה כוכב לכת הוא הקרוב ביותר לשמש?",
-                answers: ["נוגה", "כדור הארץ", "חמה", "מאדים"],
-                correct: 2
-            }
-        ];
-        
-        // אתחול המערכת
-        function init() {
+        function initPage() {
             createStars();
-            
-            // טעינת נקודות משמירה מקומית
             classes.forEach(cls => {
-                const savedPoints = localStorage.getItem(`space_points_${cls}`);
-                points[cls] = savedPoints ? parseInt(savedPoints) : 0;
+                classPoints[cls] = localStorage.getItem(`spaceQuiz_points_${cls}`) ? parseInt(localStorage.getItem(`spaceQuiz_points_${cls}`)) : 0;
             });
-            
-            // טעינת משתמש אחרון
-            const savedUser = localStorage.getItem('space_last_user');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                if (currentUser.role === 'student') {
-                    showStudentScreen();
-                } else {
-                    showTeacherScreen();
-                }
-            }
-            
-            updateScoreboards();
+            selectRole('student');
         }
-        
-        // בחירת תפקיד
         function selectRole(role) {
             currentRole = role;
-            
-            // עדכון כפתורים
-            document.querySelectorAll('.role-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.role-btn').forEach(btn => { btn.classList.remove('active'); });
             event.target.classList.add('active');
-            
-            // הצגת הטופס המתאים
-            if (role === 'student') {
-                document.getElementById('studentLoginForm').style.display = 'block';
-                document.getElementById('teacherLoginForm').style.display = 'none';
-            } else {
-                document.getElementById('studentLoginForm').style.display = 'none';
-                document.getElementById('teacherLoginForm').style.display = 'block';
-            }
+            document.getElementById('passwordGroup').style.display = role === 'teacher' ? 'block' : 'none';
         }
-        
-        // התחברות משתמש
-        function loginUser() {
-            let name, className, password;
-            
-            if (currentRole === 'student') {
-                name = document.getElementById('studentName').value.trim();
-                className = document.getElementById('studentClass').value;
-                
-                if (!name || !className) {
-                    showNotification('אנא מלאו את כל השדות', 'error');
-                    return;
-                }
-            } else {
-                name = document.getElementById('teacherName').value.trim();
-                password = document.getElementById('teacherPassword').value;
-                className = document.getElementById('teacherClass').value;
-                
-                if (!name || !password || !className) {
-                    showNotification('אנא מלאו את כל השדות', 'error');
-                    return;
-                }
-                
-                if (password !== TEACHER_PASSWORD) {
-                    showNotification('סיסמה שגויה! הסיסמה הנכונה היא: 1957', 'error');
-                    return;
-                }
+        function login() {
+            const userName = document.getElementById('userName').value.trim();
+            const userClass = document.getElementById('loginClass').value;
+            const password = document.getElementById('password').value;
+            if (!userName) { alert("אנא הכניסו שם מלא"); return; }
+            if (!userClass) { alert("אנא בחרו כיתה"); return; }
+            if (currentRole === 'teacher' && password !== teacherPassword) {
+                alert("סיסמת המורה שגויה. הסיסמה הנכונה היא: 1957"); return;
             }
-            
-            currentUser = {
-                name: name,
-                class: className,
-                role: currentRole,
-                loginTime: new Date().toISOString()
-            };
-            
-            // שמירת משתמש
-            localStorage.setItem('space_last_user', JSON.stringify(currentUser));
-            
-            // מעבר למסך המתאים
-            if (currentRole === 'student') {
-                showStudentScreen();
-                showNotification('ברוך הבא! מוכנים לחידון?', 'success');
-            } else {
-                showTeacherScreen();
-                showNotification('ברוך הבא מורה!', 'success');
-            }
+            currentUser = { name: userName, class: userClass, role: currentRole, loginTime: new Date().toLocaleString('he-IL') };
+            if (currentRole === 'student') { showStudentScreen(); } else { showTeacherScreen(); }
+            localStorage.setItem('spaceQuiz_lastUser', JSON.stringify(currentUser));
         }
-        
-        // הצגת מסך תלמיד
         function showStudentScreen() {
-            showScreen('studentScreen');
-            document.getElementById('logoutBtn').style.display = 'block';
-            
-            // עדכון פרטים
-            document.getElementById('studentWelcome').textContent = `שלום ${currentUser.name}!`;
-            document.getElementById('studentInfo').textContent = `כיתה: ${currentUser.class} | נקודות: ${points[currentUser.class] || 0}`;
-            
-            // איפוס חידון
-            document.getElementById('startQuizScreen').style.display = 'block';
-            document.getElementById('quizScreen').style.display = 'none';
-            quizActive = false;
-            currentQuestionIndex = 0;
-            
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('teacherScreen').classList.add('hidden');
+            document.getElementById('studentScreen').classList.remove('hidden');
+            document.getElementById('studentName').textContent = currentUser.name;
+            document.getElementById('studentClass').textContent = currentUser.class;
+            document.getElementById('studentWelcome').textContent = `ברוך הבא ${currentUser.name}, התחברת כמשתמש תלמיד`;
             updateScoreboard();
         }
-        
-        // הצגת מסך מורה
         function showTeacherScreen() {
-            showScreen('teacherScreen');
-            document.getElementById('logoutBtn').style.display = 'block';
-            
-            // עדכון פרטים
-            document.getElementById('teacherWelcome').textContent = `מורה ${currentUser.name}`;
-            document.getElementById('teacherInfo').textContent = `כיתה: ${currentUser.class} | ניהול מערכת`;
-            
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('studentScreen').classList.add('hidden');
+            document.getElementById('teacherScreen').classList.remove('hidden');
+            document.getElementById('teacherName').textContent = currentUser.name;
+            document.getElementById('teacherClass').textContent = currentUser.class;
+            document.getElementById('teacherWelcome').textContent = `ברוך הבא ${currentUser.name}, התחברת כמשתמש מורה`;
             updateTeacherScoreboard();
         }
-        
-        // החלפת מסכים
-        function showScreen(screenId) {
-            // הסתרת כל המסכים
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
-            
-            // הצגת המסך הנבחר
-            document.getElementById(screenId).classList.add('active');
-        }
-        
-        // יציאה
         function logout() {
-            if (confirm('האם אתם בטוחים שברצונכם לצאת?')) {
+            if (confirm("האם אתם בטוחים שברצונכם לצאת?")) {
                 currentUser = null;
-                localStorage.removeItem('space_last_user');
-                showScreen('loginScreen');
-                document.getElementById('logoutBtn').style.display = 'none';
-                
-                // ניקוי שדות
-                document.getElementById('studentName').value = '';
-                document.getElementById('studentClass').value = '';
-                document.getElementById('teacherName').value = '';
-                document.getElementById('teacherPassword').value = '';
-                document.getElementById('teacherClass').value = '';
+                document.getElementById('userName').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('loginClass').value = '';
+                document.getElementById('studentScreen').classList.add('hidden');
+                document.getElementById('teacherScreen').classList.add('hidden');
+                document.getElementById('loginScreen').classList.remove('hidden');
             }
         }
-        
-        // עדכון
+        function updateScoreboard() {
+            const scoreboard = document.getElementById('scoreboard');
+            scoreboard.innerHTML = '';
+            classes.forEach(cls => {
+                const scoreItem = document.createElement('div');
+                scoreItem.className = 'score-item';
+                scoreItem.innerHTML = `<div class="class-name">${cls}</div><div class="class-points">${classPoints[cls]} נקודות</div>`;
+                scoreboard.appendChild(scoreItem);
+            });
+        }
+        function updateTeacherScoreboard() {
+            const scoreboard = document.getElementById('teacherScoreboard');
+            scoreboard.innerHTML = '';
+            classes.forEach(cls => {
+                const scoreItem = document.createElement('div');
+                scoreItem.className = 'score-item';
+                const isTeacherClass = cls === currentUser.class;
+                if (isTeacherClass) {
+                    scoreItem.style.border = '2px solid #ffca28';
+                    scoreItem.style.background = 'rgba(255, 202, 40, 0.1)';
+                }
+                scoreItem.innerHTML = `
+                    <div class="class-name">${cls}</div>
+                    <div class="class-points">${classPoints[cls]} נקודות</div>
+                    ${isTeacherClass ? `
+                    <div class="teacher-controls">
+                        <button class="teacher-btn" onclick="addPoints('${cls}', 1)">+1</button>
+                        <button class="teacher-btn" onclick="subtractPoints('${cls}', 1)">-1</button>
+                    </div>` : ''}
+                `;
+                scoreboard.appendChild(scoreItem);
+            });
+        }
+        function addPointsToClass(points) {
+            if (!currentUser || currentUser.role !== 'teacher') {
+                alert("גישה נדחתה - רק מורים יכולים להוסיף נקודות"); return;
+            }
+            const className = currentUser.class;
+            classPoints[className] += points;
+            savePoints();
+            updateTeacherScoreboard();
+            showNotification(`הוספת ${points} נקודות לכיתה ${className}`);
+        }
+        function addCustomPoints() {
+            const input = document.getElementById('customPoints');
+            const points = parseInt(input.value);
+            if (isNaN(points) || points < 1) { alert("אנא הכניסו מספר תקין של נקודות"); return; }
+            addPointsToClass(points);
+            input.value = '';
+        }
+        function addPoints(className, points) {
+            classPoints[className] += points;
+            savePoints();
+            updateTeacherScoreboard();
+            showNotification(`הוספת ${points} נקודות לכיתה ${className}`);
+        }
+        function subtractPoints(className, points) {
+            if (classPoints[className] >= points) {
+                classPoints[className] -= points;
+                savePoints();
+                updateTeacherScoreboard();
+                showNotification(`החסרת ${points} נקודות מכיתה ${className}`);
+            } else { alert("לא ניתן להחסיר יותר נקודות מהקיים"); }
+        }
+        function resetClassPoints() {
+            if (confirm(`האם אתם בטוחים שברצונכם לאפס את הנקודות של כיתה ${currentUser.class}?`)) {
+                classPoints[currentUser.class] = 0;
+                savePoints();
+                updateTeacherScoreboard();
+                showNotification(`איפוס נקודות לכיתה ${currentUser.class}`);
+            }
+        }
+        function resetAllPoints() {
+            if (confirm("⚠️ אזהרה! האם אתם בטוחים שברצונכם לאפס את כל הנקודות בכל הכיתות?\nפעולה זו לא ניתנת לביטול!")) {
+                classes.forEach(cls => { classPoints[cls] = 0; localStorage.removeItem(`spaceQuiz_points_${cls}`); });
+                updateTeacherScoreboard();
+                showNotification("כל הנקודות אופסו בהצלחה");
+            }
+        }
+        function showAllPoints() {
+            let message = "נקודות כל הכיתות:\n\n";
+            classes.forEach(cls => { message += `${cls}: ${classPoints[cls]} נקודות\n`; });
+            alert(message);
+        }
+        function savePoints() { classes.forEach(cls => { localStorage.setItem(`spaceQuiz_points_${cls}`, classPoints[cls]); }); }
+        function showNotification(message) { alert(message); }
+        function startQuiz() {
+            if (!currentUser || currentUser.role !== 'student') { alert("גישה נדחתה - רק תלמידים יכולים לשחק בחידון"); return; }
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'block';
+            quizActive = true;
+            currentQuestionIndex = 0;
+            showQuestion();
+        }
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) { endQuiz(); return; }
+            const question = questions[currentQuestionIndex];
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = '';
+            question.answers.forEach((answer, index) => {
+                const button = document.createElement('button');
+                button.className = 'answer-btn';
+                button.textContent = answer;
+                button.onclick = () => checkAnswer(index);
+                answersContainer.appendChild(button);
+            });
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('feedback').style.display = 'none';
+        }
+        function checkAnswer(selectedIndex) {
+            const question = questions[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.answer-btn');
+            const feedback = document.getElementById('feedback');
+            buttons.forEach(btn => btn.disabled = true);
+            buttons.forEach((btn, index) => {
+                if (index === question.correct) { btn.classList.add('correct'); }
+                else if (index === selectedIndex && index !== question.correct) { btn.classList.add('wrong'); }
+            });
+            if (selectedIndex === question.correct) {
+                feedback.textContent = "🎉 תשובה נכונה! הכיתה קיבלה נקודה!";
+                feedback.className = "feedback correct-feedback";
+                const className = currentUser.class;
+                classPoints[className]++;
+                savePoints();
+                updateScoreboard();
+            } else {
+                feedback.textContent = `❌ לא נכון. התשובה הנכונה היא: ${question.answers[question.correct]}`;
+                feedback.className = "feedback wrong-feedback";
+            }
+            feedback.style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) { showQuestion(); } else { endQuiz(); }
+        }
+        function endQuiz() {
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+            const startScreen = document.getElementById('startScreen');
+            startScreen.innerHTML = `
+                <h2>סיימתם את החידון!</h2>
+                <p>כיתה ${currentUser.class} צברה ${classPoints[currentUser.class]} נקודות בסך הכל</p>
+                <p>כל הכבוד! המשיכו כך 🚀</p>
+                <div class="controls">
+                    <button onclick="startQuiz()">משחק חוזר</button>
+                </div>
+            `;
+            quizActive = false;
+        }
+        window.onload = initPage;
+    </script>
+</body>
+</html>
