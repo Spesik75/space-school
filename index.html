@@ -657,94 +657,130 @@
         }
         
         // ================ Firebase ================
-        async function initFirebase() {
-            try {
-                // אתחול Firebase
-                firebase.initializeApp(firebaseConfig);
-                db = firebase.database();
-                
-                // בדיקת חיבור
-                const connectedRef = db.ref('.info/connected');
-                connectedRef.on('value', (snap) => {
-                    updateConnectionStatus(snap.val() === true);
-                });
-                
-                // הגדרת reference לנקודות
-                pointsRef = db.ref('points');
-                
-                // האזנה לשינויים בנקודות
-                pointsRef.on('value', (snapshot) => {
-                    const data = snapshot.val() || {};
-                    
-                    // עדכון הנקודות המקומיות
-                    classes.forEach(cls => {
-                        points[cls] = data[cls] || 0;
-                    });
-                    
-                    // עדכון המסכים אם הם פעילים
-                    if (currentUser) {
-                        if (currentUser.role === 'student') {
-                            updateScoreboard();
-                            updateStudentInfo();
-                        } else {
-                            updateTeacherScoreboard();
-                        }
-                    }
-                    
-                    // אנימציית עדכון
-                    highlightUpdatedClasses(data);
-                });
-                
-                // טעינת נקודות ראשונית
-                const snapshot = await pointsRef.once('value');
-                const data = snapshot.val() || {};
-                
-                classes.forEach(cls => {
-                    points[cls] = data[cls] || 0;
-                });
-                
-                return true;
-            } catch (error) {
-                console.error('Firebase initialization error:', error);
-                showNotification('שגיאה בחיבור לענן. הנקודות ישמרו מקומית בלבד.', 'error');
-                return false;
-            }
+  <!-- הוסף את השורות האלו אחרי התגית <script> הנוכחית -->
+<script>
+console.log("=== בדיקת Firebase ===");
+
+// הגדרות Firebase שלך - נראות טוב!
+const firebaseConfig = {
+  apiKey: "AIzaSyDpq2jXjY-QTfc_N5S4sqLs-NaRS7ow1vQ",
+  authDomain: "space-school-72807.firebaseapp.com",
+  databaseURL: "https://space-school-72807-default-rtdb.firebaseio.com",
+  projectId: "space-school-72807",
+  storageBucket: "space-school-72807.firebasestorage.app",
+  messagingSenderId: "919939980128",
+  appId: "1:919939980128:web:53c7b02240b9ac8347dc05"
+};
+
+console.log("Firebase Config:", firebaseConfig);
+
+async function initFirebase() {
+    try {
+        console.log("מתחיל אתחול Firebase...");
+        
+        // בדוק אם Firebase כבר מאותחל
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+            console.log("Firebase אותחל בהצלחה!");
+        } else {
+            console.log("Firebase כבר מאותחל");
         }
         
-        function highlightUpdatedClasses(newData) {
-            classes.forEach(cls => {
-                if (newData[cls] !== points[cls]) {
-                    const items = document.querySelectorAll(`.score-item .class-name:contains('${cls}')`);
-                    items.forEach(item => {
-                        const parent = item.closest('.score-item');
-                        if (parent) {
-                            parent.classList.add('updated');
-                            setTimeout(() => parent.classList.remove('updated'), 1000);
-                        }
-                    });
-                }
-            });
-        }
+        db = firebase.database();
+        console.log("Database connected!");
         
-        async function updatePointsInFirebase() {
-            if (!pointsRef) {
-                console.log('No Firebase connection, saving locally');
-                // שמירה מקומית כגיבוי
-                classes.forEach(cls => {
-                    localStorage.setItem('points_' + cls, points[cls]);
-                });
-                return;
-            }
+        // בדיקת חיבור
+        const connectedRef = db.ref('.info/connected');
+        connectedRef.on('value', (snap) => {
+            const isConnected = snap.val() === true;
+            console.log("מחובר לענן?", isConnected);
+            updateConnectionStatus(isConnected);
             
-            try {
-                await pointsRef.set(points);
-                console.log('Points updated in Firebase');
-            } catch (error) {
-                console.error('Error updating points in Firebase:', error);
-                showNotification('שגיאה בשמירת נקודות לענן', 'error');
+            if (isConnected) {
+                // הסתר מסך טעינה והצג אפליקציה
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
             }
-        }
+        });
         
+        // הגדרת reference לנקודות
+        pointsRef = db.ref('points');
+        console.log("Points reference created");
+        
+        // האזנה לשינויים
+        pointsRef.on('value', (snapshot) => {
+            const data = snapshot.val() || {};
+            console.log("נתונים חדשים מהענן:", data);
+            
+            classes.forEach(cls => {
+                points[cls] = data[cls] || 0;
+            });
+            
+            if (currentUser) {
+                updateScoreboard();
+                updateStudentInfo();
+            }
+        });
+        
+        // טעינה ראשונית
+        const snapshot = await pointsRef.once('value');
+        const initialData = snapshot.val() || {};
+        console.log("נתונים ראשוניים:", initialData);
+        
+        classes.forEach(cls => {
+            points[cls] = initialData[cls] || 0;
+        });
+        
+        return true;
+        
+    } catch (error) {
+        console.error("שגיאת Firebase:", error);
+        
+        // אם יש שגיאה - תעבור למצב מקומי
+        document.getElementById('loadingScreen').innerHTML = `
+            <h2>⚠️ לא ניתן להתחבר לענן</h2>
+            <p>המערכת תעבוד במצב מקלי בלבד</p>
+            <button onclick="useLocalMode()" class="btn btn-primary" style="margin-top: 20px;">
+                המשך במצב מקומי
+            </button>
+        `;
+        
+        return false;
+    }
+}
+
+function useLocalMode() {
+    console.log("מעבר למצב מקלי");
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    updateConnectionStatus(false);
+}
+
+// שנה את הפונקציה הזו במקום זו הקיימת
+async function updatePointsInFirebase() {
+    if (!pointsRef) {
+        console.log("מצב מקלי - שומר במחשב בלבד");
+        classes.forEach(cls => {
+            localStorage.setItem('points_' + cls, points[cls]);
+        });
+        return;
+    }
+    
+    try {
+        await pointsRef.set(points);
+        console.log("נקודות נשמרו בענן!");
+    } catch (error) {
+        console.error("שגיאה בשמירה לענן:", error);
+    }
+}
+
+// התחל את האפליקציה
+window.onload = function() {
+    console.log("טוען אפליקציה...");
+    createStars();
+    initFirebase();
+};
+</script>
         // ================ ניהול מסכים ================
         function selectRole(role) {
             currentRole = role;
