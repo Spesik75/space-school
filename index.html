@@ -424,6 +424,96 @@
             `;
             quizActive = false;
         }
+             // ==================== Firebase ====================
+        function initFirebase() {
+            try {
+                console.log("מתחיל Firebase...");
+                
+                // אתחול
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.database();
+                
+                console.log("Firebase אותחל!");
+                
+                // בדיקת חיבור
+                const connectedRef = db.ref('.info/connected');
+                connectedRef.on('value', (snap) => {
+                    const connected = snap.val() === true;
+                    updateStatus(connected);
+                    
+                    if (connected) {
+                        console.log("✅ מחובר לענן!");
+                        setupDatabase();
+                    }
+                });
+                
+            } catch (error) {
+                console.error("❌ שגיאת Firebase:", error);
+                updateStatus(false);
+                alert("לא ניתן להתחבר לענן. המערכת תעבוד מקומית.");
+            }
+        }
+        
+        function setupDatabase() {
+            pointsRef = db.ref('points');
+            
+            // האזנה לשינויים בזמן אמת
+            pointsRef.on('value', (snapshot) => {
+                const data = snapshot.val() || {};
+                console.log("📊 נתונים חדשים:", data);
+                
+                // עדכון נקודות
+                classes.forEach(cls => {
+                    points[cls] = data[cls] || 0;
+                });
+                
+                // עדכון תצוגה
+                updateScoreboard();
+                updateUserInfo();
+            });
+            
+            // טעינה ראשונית
+            pointsRef.once('value').then((snapshot) => {
+                const data = snapshot.val() || {};
+                console.log("📥 נתונים ראשוניים:", data);
+                
+                classes.forEach(cls => {
+                    points[cls] = data[cls] || 0;
+                });
+                
+                updateScoreboard();
+            });
+        }
+        
+        async function saveToCloud() {
+            if (!pointsRef) {
+                console.log("💾 שמירה מקומית בלבד");
+                saveLocal();
+                return;
+            }
+            
+            try {
+                await pointsRef.set(points);
+                console.log("✅ נשמר בענן!");
+            } catch (error) {
+                console.error("❌ שגיאה בשמירה לענן:", error);
+                saveLocal();
+            }
+        }
+        
+        function saveLocal() {
+            classes.forEach(cls => {
+                localStorage.setItem('points_' + cls, points[cls]);
+            });
+        }
+        
+        function loadLocal() {
+            classes.forEach(cls => {
+                const saved = localStorage.getItem('points_' + cls);
+                points[cls] = saved ? parseInt(saved) : 0;
+            });
+        }
+        
         window.onload = initPage;
     </script>
 </body>
