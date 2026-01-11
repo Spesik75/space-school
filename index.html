@@ -1,621 +1,370 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>חידון חלל - נקודות בענן</title>
+    <title>Quiz Game - Combined Version</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
-            font-family: 'Arial', sans-serif;
-            background: #0a0e27;
-            color: white;
-            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
             padding: 20px;
+            background-color: #f5f5f5;
         }
         
         .container {
-            max-width: 800px;
-            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         
-        .header {
+        h1 {
             text-align: center;
-            padding: 20px;
-            background: rgba(0,0,0,0.7);
-            border-radius: 15px;
-            margin-bottom: 20px;
-            border: 2px solid #4fc3f7;
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
         }
         
-        h1 { color: #4fc3f7; margin-bottom: 10px; }
-        
-        .screen {
-            display: none;
-            background: rgba(0,0,0,0.7);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
         }
         
-        .active { display: block; }
-        
-        .btn {
-            padding: 12px 24px;
-            margin: 10px;
-            background: #4fc3f7;
-            color: black;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            display: inline-block;
-        }
-        
-        .btn-green {
-            background: #4CAF50;
-            color: white;
-        }
-        
-        .btn-red {
-            background: #f44336;
-            color: white;
-        }
-        
-        input, select {
+        button {
             padding: 12px;
-            margin: 10px;
-            width: 90%;
-            max-width: 300px;
-            border-radius: 8px;
-            border: 2px solid #4fc3f7;
-            background: #111;
-            color: white;
-            text-align: center;
-        }
-        
-        .quiz-box {
-            background: rgba(30,30,60,0.8);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border: 1px solid #4fc3f7;
-        }
-        
-        .question {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        
-        .answers {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .answer-btn {
-            padding: 15px;
-            background: #1a237e;
+            background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
         
-        .answer-btn:hover {
-            background: #283593;
+        button:hover {
+            background-color: #45a049;
         }
         
-        .answer-btn.correct {
-            background: #2E7D32;
+        .back-btn {
+            background-color: #666;
+            margin-top: 10px;
         }
         
-        .answer-btn.wrong {
-            background: #C62828;
+        .back-btn:hover {
+            background-color: #555;
         }
         
-        .scoreboard {
-            background: rgba(0,0,0,0.7);
-            padding: 15px;
-            border-radius: 10px;
+        .question-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             margin: 20px 0;
-            border: 2px solid #ffca28;
         }
         
-        .score-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .score-item {
-            background: rgba(30,30,60,0.8);
+        input, select, textarea {
             padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid #4fc3f7;
-            transition: all 0.3s;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
         }
         
-        .highlight {
-            background: rgba(255, 202, 40, 0.3);
-            border: 2px solid #ffca28;
-        }
-        
-        .progress {
-            margin: 20px 0;
-            text-align: center;
-            color: #ffca28;
-            font-size: 1.1rem;
-        }
-        
-        .feedback {
+        .question-item {
+            background-color: #f9f9f9;
             padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            text-align: center;
-            font-weight: bold;
+            margin: 10px 0;
+            border-left: 4px solid #4CAF50;
+            border-radius: 5px;
+        }
+        
+        .hidden {
             display: none;
         }
         
-        .correct-feedback {
-            background: rgba(76, 175, 80, 0.2);
-            border: 2px solid #4CAF50;
-            color: #4CAF50;
+        #questionsList {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
         }
         
-        .wrong-feedback {
-            background: rgba(244, 67, 54, 0.2);
-            border: 2px solid #f44336;
-            color: #f44336;
+        .options-container {
+            margin-left: 20px;
         }
         
-        .status {
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px;
-            text-align: center;
-            font-weight: bold;
-            background: rgba(0,0,0,0.5);
-        }
-        
-        .online {
-            background: rgba(76, 175, 80, 0.2);
-            color: #4CAF50;
-            border: 1px solid #4CAF50;
-        }
-        
-        .offline {
-            background: rgba(244, 67, 54, 0.2);
-            color: #f44336;
-            border: 1px solid #f44336;
-        }
-        
-        @media (max-width: 768px) {
-            .score-grid { grid-template-columns: repeat(3, 1fr); }
-            .btn { display: block; width: 90%; margin: 10px auto; }
-            .answers { grid-template-columns: 1fr; }
+        .option-item {
+            background-color: #e8f5e8;
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 3px;
         }
     </style>
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
     <div class="container">
-        <!-- סטטוס חיבור -->
-        <div id="status" class="status offline">
-            🔄 מתחבר לענן...
-        </div>
+        <h1>🎯 Quiz Game</h1>
         
-        <!-- מסך התחברות -->
-        <div class="screen active" id="loginScreen">
-            <div class="header">
-                <h1>🚀 חידון חלל - נקודות בענן</h1>
-                <p>כולם רואים אותם נקודות בזמן אמת!</p>
-            </div>
-            
-            <div style="text-align: center;">
-                <input type="text" id="userName" placeholder="שמך המלא">
-                <select id="userClass">
-                    <option value="">בחר כיתה</option>
-                    <option value="ז1">ז1</option><option value="ז2">ז2</option>
-                    <option value="ז3">ז3</option><option value="ז4">ז4</option>
-                    <option value="ז5">ז5</option><option value="ז6">ז6</option>
-                    <option value="ז7">ז7</option><option value="ח1">ח1</option>
-                    <option value="ח2">ח2</option><option value="ח3">ח3</option>
-                    <option value="ח4">ח4</option><option value="ח5">ח5</option>
-                    <option value="ח6">ח6</option><option value="ט1">ט1</option>
-                    <option value="ט2">ט2</option><option value="ט3">ט3</option>
-                    <option value="ט4">ט4</option><option value="ט5">ט5</option>
-                    <option value="ט6">ט6</option>
-                </select>
-                <br>
-                <button class="btn" onclick="login()">התחל חידון</button>
+        <!-- Main Menu -->
+        <div id="mainMenu">
+            <div class="menu">
+                <button onclick="startQuiz('multiple-choice')">1. Multiple Choice Quiz</button>
+                <button onclick="startQuiz('true-false')">2. True/False Quiz</button>
+                <button onclick="startQuiz('fill-blanks')">3. Fill in the Blanks</button>
+                <button onclick="showTeacherMode()">4. Teacher Mode</button>
+                <button onclick="exitGame()">5. Exit</button>
             </div>
         </div>
         
-        <!-- מסך חידון -->
-        <div class="screen" id="quizScreen">
-            <div class="header">
-                <h2 id="welcomeText"></h2>
-                <p id="classInfo"></p>
+        <!-- Teacher Mode -->
+        <div id="teacherMode" class="hidden">
+            <h2>👨‍🏫 Teacher Mode</h2>
+            
+            <div class="menu">
+                <button onclick="showAddQuestion()">Add New Question</button>
+                <button onclick="showViewQuestions()">View All Questions</button>
+                <button onclick="clearAllQuestions()">Clear All Questions</button>
+                <button class="back-btn" onclick="backToMenu()">← Back to Menu</button>
             </div>
             
-            <div class="progress">
-                שאלה <span id="currentQuestionNum">1</span> מתוך 50
+            <!-- Add Question Form -->
+            <div id="addQuestionForm" class="hidden">
+                <h3>Add New Question</h3>
+                <form id="questionForm" class="question-form" onsubmit="addQuestion(event)">
+                    <div>
+                        <label>Question Type:</label>
+                        <select id="questionType" onchange="toggleQuestionFields()">
+                            <option value="multiple-choice">Multiple Choice</option>
+                            <option value="true-false">True/False</option>
+                            <option value="fill-blank">Fill in the Blank</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label>Question Text:</label>
+                        <textarea id="questionText" rows="3" required></textarea>
+                    </div>
+                    
+                    <!-- Multiple Choice Fields -->
+                    <div id="multipleChoiceFields">
+                        <label>Options (one per line, mark correct answer with *):</label>
+                        <textarea id="optionsText" rows="4" placeholder="Option 1&#10;*Correct Option&#10;Option 3&#10;Option 4"></textarea>
+                    </div>
+                    
+                    <!-- True/False Fields -->
+                    <div id="trueFalseFields" class="hidden">
+                        <label>Correct Answer:</label>
+                        <select id="trueFalseAnswer">
+                            <option value="True">True</option>
+                            <option value="False">False</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Fill in Blank Fields -->
+                    <div id="fillBlankFields" class="hidden">
+                        <label>Correct Answer (blank word):</label>
+                        <input type="text" id="blankAnswer" placeholder="Enter the correct word">
+                        <small>Use _____ in question text to indicate blank</small>
+                    </div>
+                    
+                    <button type="submit">Add Question</button>
+                    <button type="button" class="back-btn" onclick="showTeacherMode()">Cancel</button>
+                </form>
             </div>
             
-            <div class="quiz-box">
-                <div class="question" id="questionText"></div>
-                <div class="answers" id="answers"></div>
-            </div>
-            
-            <div class="feedback" id="feedback"></div>
-            
-            <div style="text-align: center;">
-                <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">שאלה הבאה</button>
-            </div>
-            
-            <div class="scoreboard">
-                <h3 style="text-align: center; color: #ffca28;">🏆 לוח ניקוד משותף</h3>
-                <div class="score-grid" id="scoreboard"></div>
-            </div>
-            
-            <div style="text-align: center; margin-top: 20px;">
-                <button class="btn btn-red" onclick="logout()">יציאה</button>
+            <!-- View Questions -->
+            <div id="viewQuestions" class="hidden">
+                <h3>All Questions</h3>
+                <div id="questionsList"></div>
+                <button class="back-btn" onclick="showTeacherMode()">← Back to Teacher Mode</button>
             </div>
         </div>
     </div>
 
     <script>
-        // ================ הגדרות Firebase ================
-        const firebaseConfig = {
-            apiKey: "AIzaSyDpq2jXjY-QTfc_N5S4sqLs-NaRS7ow1vQ",
-            authDomain: "space-school-72807.firebaseapp.com",
-            databaseURL: "https://space-school-72807-default-rtdb.firebaseio.com",
-            projectId: "space-school-72807",
-            storageBucket: "space-school-72807.firebasestorage.app",
-            messagingSenderId: "919939980128",
-            appId: "1:919939980128:web:53c7b02240b9ac8347dc05"
-        };
+        // Initialize questions from localStorage or empty array
+        let questions = JSON.parse(localStorage.getItem('quizQuestions')) || [];
         
-        // ================ 50 שאלות חלל ================
-        const questions = [
-            // 1-10
-            {question: "איזה כוכב לכת נקרא 'כוכב הלכת האדום'?", answers: ["נוגה", "מאדים", "צדק", "שבתאי"], correct: 1},
-            {question: "מהו כוכב הלכת הגדול ביותר במערכת השמש?", answers: ["כדור הארץ", "שבתאי", "צדק", "נפטון"], correct: 2},
-            {question: "מי היה האדם הראשון שצעד על הירח?", answers: ["יורי גגארין", "באז אולדרין", "ניל ארמסטרונג", "מייקל קולינס"], correct: 2},
-            {question: "מה שמה של הגלקסיה שלנו?", answers: ["אנדרומדה", "שביל החלב", "גלקסיית הסומבררו", "גלקסיית המערבולת"], correct: 1},
-            {question: "איזה כוכב לכת ידוע בטבעותיו המרהיבות?", answers: ["צדק", "נפטון", "אורנוס", "שבתאי"], correct: 3},
-            {question: "איזה כוכב לכת הוא הקרוב ביותר לשמש?", answers: ["נוגה", "כדור הארץ", "חמה", "מאדים"], correct: 2},
-            {question: "מהו הירח הגדול ביותר של שבתאי?", answers: ["אירופה", "טיטאן", "גנימד", "קליסטו"], correct: 1},
-            {question: "איזה כוכב לכת יש לו הכתם האדום הגדול?", answers: ["מאדים", "צדק", "שבתאי", "נפטון"], correct: 1},
-            {question: "מהו כוכב הלכת החם ביותר במערכת השמש?", answers: ["חמה", "נוגה", "כדור הארץ", "מאדים"], correct: 1},
-            {question: "איזה כוכב לכת נקרא 'כוכב הלכת הכחול'?", answers: ["כדור הארץ", "נפטון", "אורנוס", "צדק"], correct: 0},
-            // 11-20
-            {question: "מהו כוכב הלכת עם הזמן הקצר ביותר לסיבוב סביב השמש?", answers: ["חמה", "נוגה", "כדור הארץ", "מאדים"], correct: 0},
-            {question: "איזה כוכב לכת יש לו 27 ירחים ידועים?", answers: ["צדק", "שבתאי", "אורנוס", "נפטון"], correct: 2},
-            {question: "מהו כוכב הלכת הקטן ביותר במערכת השמש?", answers: ["חמה", "מאדים", "נוגה", "פלוטו"], correct: 0},
-            {question: "איזה כוכב לכת מסתובב על צידו?", answers: ["שבתאי", "נפטון", "אורנוס", "צדק"], correct: 2},
-            {question: "מהו כוכב הלכת עם רוח הכי חזקה?", answers: ["צדק", "שבתאי", "נפטון", "אורנוס"], correct: 2},
-            {question: "איזה כוכב לכת יש לו את היום הארוך ביותר?", answers: ["נוגה", "צדק", "שבתאי", "נפטון"], correct: 0},
-            {question: "מהו כוכב הלכת עם הצפיפות הנמוכה ביותר?", answers: ["שבתאי", "צדק", "אורנוס", "נפטון"], correct: 0},
-            {question: "איזה כוכב לכת נקרא על שם אל הים הרומי?", answers: ["אורנוס", "נפטון", "צדק", "מאדים"], correct: 1},
-            {question: "מהו כוכב הלכת עם הירח הגדול ביותר?", answers: ["כדור הארץ", "צדק", "שבתאי", "נפטון"], correct: 1},
-            {question: "איזה כוכב לכת יש לו את הטמפרטורה הנמוכה ביותר?", answers: ["נפטון", "אורנוס", "שבתאי", "צדק"], correct: 0},
-            // 21-30
-            {question: "מה שמה של התוכנית האמריקאית לנחיתה על הירח?", answers: ["ג'מיני", "מרקורי", "אפולו", "ווסטוק"], correct: 2},
-            {question: "מי היה האסטרונאוט הישראלי הראשון?", answers: ["אילן רמון", "יוסף קריב", "דן תמיר", "אבי הר-אבן"], correct: 0},
-            {question: "מה שמה של תחנת החלל הבינלאומית?", answers: ["ISS", "MIR", "TIANGONG", "SKYLAB"], correct: 0},
-            {question: "איזה חיה הייתה הראשונה בחלל?", answers: ["קוף", "כלב", "חולדה", "ארנבת"], correct: 1},
-            {question: "מהו המכשיר המשמש לצפייה בכוכבים?", answers: ["מיקרוסקופ", "טלסקופ", "פריסקופ", "ספקטרוסקופ"], correct: 1},
-            {question: "מהו האסטרואיד הגדול ביותר בחגורת האסטרואידים?", answers: ["צרס", "וסטה", "פאלאס", "היגיאה"], correct: 0},
-            {question: "מהו סוג הטלסקופ הראשון שהומצא?", answers: ["שבירתי", "החזרי", "רדיו", "אינפרא אדום"], correct: 0},
-            {question: "איזה גוף שמימי אינו כוכב לכת?", answers: ["פלוטו", "מאדים", "נוגה", "שבתאי"], correct: 0},
-            {question: "מהו כוכב הצפון?", answers: ["סיריוס", "פולאריס", "בטלג'וז", "ריג'ל"], correct: 1},
-            {question: "מהו הכוכב הבהיר ביותר בשמי הלילה?", answers: ["סיריוס", "פולאריס", "בטלג'וז", "קאנופוס"], correct: 0},
-            // 31-40
-            {question: "מהו כוכב הלכת עם הכי הרבה ירחים?", answers: ["צדק", "שבתאי", "אורנוס", "נפטון"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את הזנב הארוך ביותר?", answers: ["שבתאי", "נפטון", "אורנוס", "צדק"], correct: 1},
-            {question: "מהו כוכב הלכת עם הכי הרבה טבעות?", answers: ["צדק", "שבתאי", "אורנוס", "נפטון"], correct: 1},
-            {question: "איזה כוכב לכת יש לו את הצבע הכחול העז ביותר?", answers: ["כדור הארץ", "נפטון", "אורנוס", "צדק"], correct: 1},
-            {question: "מהו כוכב הלכת עם הכי פחות ירחים?", answers: ["חמה", "נוגה", "מאדים", "כדור הארץ"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את הציר המוטה ביותר?", answers: ["נפטון", "אורנוס", "שבתאי", "צדק"], correct: 1},
-            {question: "מהו כוכב הלכת עם המסה הגדולה ביותר?", answers: ["צדק", "שבתאי", "נפטון", "אורנוס"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את היקף המסלול הגדול ביותר?", answers: ["נפטון", "אורנוס", "שבתאי", "צדק"], correct: 0},
-            {question: "מהו כוכב הלכת עם הצפיפות הגבוהה ביותר?", answers: ["כדור הארץ", "נוגה", "חמה", "מאדים"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את הירח היחיד?", answers: ["כדור הארץ", "מאדים", "נוגה", "חמה"], correct: 0},
-            // 41-50
-            {question: "מהו כוכב הלכת עם הזמן הארוך ביותר לסיבוב עצמי?", answers: ["נוגה", "חמה", "מאדים", "כדור הארץ"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את האטמוספירה הדקה ביותר?", answers: ["חמה", "מאדים", "נוגה", "כדור הארץ"], correct: 0},
-            {question: "מהו כוכב הלכת עם הכי הרבה הרי געש?", answers: ["נוגה", "כדור הארץ", "מאדים", "צדק"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את השדה המגנטי החזק ביותר?", answers: ["צדק", "כדור הארץ", "שבתאי", "נוגה"], correct: 0},
-            {question: "מהו כוכב הלכת עם הכי הרבה סופות?", answers: ["צדק", "שבתאי", "נפטון", "אורנוס"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את הטמפרטורה היציבה ביותר?", answers: ["כדור הארץ", "נוגה", "מאדים", "חמה"], correct: 0},
-            {question: "מהו כוכב הלכת עם הכי הרבה מים?", answers: ["כדור הארץ", "נוגה", "מאדים", "צדק"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את הצבע האדום ביותר?", answers: ["מאדים", "נוגה", "כדור הארץ", "חמה"], correct: 0},
-            {question: "מהו כוכב הלכת עם הכי הרבה חיים?", answers: ["כדור הארץ", "מאדים", "נוגה", "צדק"], correct: 0},
-            {question: "איזה כוכב לכת הוא היחיד עם חיים ידועים?", answers: ["כדור הארץ", "מאדים", "נוגה", "צדק"], correct: 0}
-        ];
+        // Show main menu by default
+        document.getElementById('mainMenu').classList.remove('hidden');
         
-        // ================ משתני מערכת ================
-        const classes = ["ז1","ז2","ז3","ז4","ז5","ז6","ז7","ח1","ח2","ח3","ח4","ח5","ח6","ט1","ט2","ט3","ט4","ט5","ט6"];
-        let currentUser = null;
-        let currentQuestionIndex = 0;
-        let points = {};
-        let answeredCorrectly = 0;
-        let totalQuestions = 50;
-        let db = null;
-        let pointsRef = null;
+        // Navigation functions
+        function backToMenu() {
+            hideAllSections();
+            document.getElementById('mainMenu').classList.remove('hidden');
+        }
         
-        // ================ Firebase ================
-        function initFirebase() {
-            try {
-                console.log("מתחבר ל-Firebase...");
-                firebase.initializeApp(firebaseConfig);
-                db = firebase.database();
-                
-                // בדיקת חיבור
-                const connectedRef = db.ref('.info/connected');
-                connectedRef.on('value', (snap) => {
-                    const connected = snap.val() === true;
-                    updateStatus(connected);
-                    
-                    if (connected) {
-                        console.log("✅ מחובר לענן!");
-                        setupDatabase();
-                    }
-                });
-                
-            } catch (error) {
-                console.error("❌ שגיאת Firebase:", error);
-                updateStatus(false);
-                alert("לא ניתן להתחבר לענן. המערכת תעבוד מקומית.");
+        function showTeacherMode() {
+            hideAllSections();
+            document.getElementById('teacherMode').classList.remove('hidden');
+            document.getElementById('addQuestionForm').classList.add('hidden');
+            document.getElementById('viewQuestions').classList.add('hidden');
+        }
+        
+        function showAddQuestion() {
+            hideAllSections();
+            document.getElementById('teacherMode').classList.remove('hidden');
+            document.getElementById('addQuestionForm').classList.remove('hidden');
+            document.getElementById('viewQuestions').classList.add('hidden');
+            toggleQuestionFields();
+        }
+        
+        function showViewQuestions() {
+            hideAllSections();
+            document.getElementById('teacherMode').classList.remove('hidden');
+            document.getElementById('addQuestionForm').classList.add('hidden');
+            document.getElementById('viewQuestions').classList.remove('hidden');
+            displayAllQuestions();
+        }
+        
+        function hideAllSections() {
+            document.getElementById('mainMenu').classList.add('hidden');
+            document.getElementById('teacherMode').classList.add('hidden');
+            document.getElementById('addQuestionForm').classList.add('hidden');
+            document.getElementById('viewQuestions').classList.add('hidden');
+        }
+        
+        // Question type field toggling
+        function toggleQuestionFields() {
+            const type = document.getElementById('questionType').value;
+            
+            // Hide all fields
+            document.getElementById('multipleChoiceFields').classList.add('hidden');
+            document.getElementById('trueFalseFields').classList.add('hidden');
+            document.getElementById('fillBlankFields').classList.add('hidden');
+            
+            // Show relevant fields
+            if (type === 'multiple-choice') {
+                document.getElementById('multipleChoiceFields').classList.remove('hidden');
+            } else if (type === 'true-false') {
+                document.getElementById('trueFalseFields').classList.remove('hidden');
+            } else if (type === 'fill-blank') {
+                document.getElementById('fillBlankFields').classList.remove('hidden');
             }
         }
         
-        function setupDatabase() {
-            pointsRef = db.ref('points');
+        // Add new question
+        function addQuestion(event) {
+            event.preventDefault();
             
-            // האזנה לשינויים בזמן אמת
-            pointsRef.on('value', (snapshot) => {
-                const data = snapshot.val() || {};
-                console.log("📊 נתונים חדשים מהענן:", data);
-                
-                // עדכון נקודות
-                classes.forEach(cls => {
-                    points[cls] = data[cls] || 0;
-                });
-                
-                // עדכון תצוגה
-                updateScoreboard();
-                updateUserInfo();
-            });
+            const type = document.getElementById('questionType').value;
+            const questionText = document.getElementById('questionText').value.trim();
             
-            // טעינה ראשונית
-            pointsRef.once('value').then((snapshot) => {
-                const data = snapshot.val() || {};
-                console.log("📥 נתונים ראשוניים:", data);
-                
-                classes.forEach(cls => {
-                    points[cls] = data[cls] || 0;
-                });
-                
-                updateScoreboard();
-            });
-        }
-        
-        async function saveToCloud() {
-            if (!pointsRef) {
-                console.log("💾 שמירה מקומית בלבד");
-                saveLocal();
+            if (!questionText) {
+                alert('Please enter a question!');
                 return;
             }
             
-            try {
-                await pointsRef.set(points);
-                console.log("✅ נשמר בענן!");
-            } catch (error) {
-                console.error("❌ שגיאה בשמירה לענן:", error);
-                saveLocal();
-            }
-        }
-        
-        function saveLocal() {
-            classes.forEach(cls => {
-                localStorage.setItem('points_' + cls, points[cls]);
-            });
-        }
-        
-        function loadLocal() {
-            classes.forEach(cls => {
-                const saved = localStorage.getItem('points_' + cls);
-                points[cls] = saved ? parseInt(saved) : 0;
-            });
-        }
-        
-        function updateStatus(connected) {
-            const statusEl = document.getElementById('status');
-            if (connected) {
-                statusEl.textContent = "✅ מחובר לענן - נקודות משותפות";
-                statusEl.className = "status online";
-            } else {
-                statusEl.textContent = "⚠️ מצב מקלי - נקודות נשמרות במחשב זה בלבד";
-                statusEl.className = "status offline";
-            }
-        }
-        
-        // ================ פונקציות משתמש ================
-        function login() {
-            const name = document.getElementById('userName').value.trim();
-            const className = document.getElementById('userClass').value;
+            let newQuestion = {
+                type: type,
+                question: questionText
+            };
             
-            if (!name || !className) {
-                alert('אנא מלא את כל השדות');
-                return;
-            }
-            
-            currentUser = { name: name, class: className };
-            
-            document.getElementById('welcomeText').textContent = `שלום ${name}!`;
-            document.getElementById('classInfo').textContent = `כיתה ${className}`;
-            
-            showScreen('quizScreen');
-            showQuestion();
-            updateScoreboard();
-        }
-        
-        function showQuestion() {
-            if (currentQuestionIndex >= questions.length) {
-                endQuiz();
-                return;
-            }
-            
-            const q = questions[currentQuestionIndex];
-            document.getElementById('questionText').textContent = q.question;
-            document.getElementById('currentQuestionNum').textContent = currentQuestionIndex + 1;
-            
-            const answersDiv = document.getElementById('answers');
-            answersDiv.innerHTML = '';
-            
-            q.answers.forEach((answer, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'answer-btn';
-                btn.textContent = answer;
-                btn.onclick = () => checkAnswer(index);
-                answersDiv.appendChild(btn);
-            });
-            
-            document.getElementById('feedback').style.display = 'none';
-            document.getElementById('nextBtn').style.display = 'none';
-        }
-        
-        function checkAnswer(answerIndex) {
-            const q = questions[currentQuestionIndex];
-            const feedback = document.getElementById('feedback');
-            
-            // חסימת כפתורים
-            document.querySelectorAll('.answer-btn').forEach(btn => {
-                btn.disabled = true;
-            });
-            
-            if (answerIndex === q.correct) {
-                feedback.innerHTML = '🎉 תשובה נכונה! +1 נקודה לכיתה!';
-                feedback.className = 'feedback correct-feedback';
-                
-                // הוסף נקודה לכיתה
-                points[currentUser.class] = (points[currentUser.class] || 0) + 1;
-                answeredCorrectly++;
-                
-                // שמור נקודות בענן
-                saveToCloud();
-                
-                // סמן תשובה נכונה
-                document.querySelectorAll('.answer-btn')[q.correct].classList.add('correct');
-            } else {
-                feedback.innerHTML = `❌ לא נכון. התשובה הנכונה: ${q.answers[q.correct]}`;
-                feedback.className = 'feedback wrong-feedback';
-                
-                // סמן תשובות שגויות ונכונות
-                document.querySelectorAll('.answer-btn')[answerIndex].classList.add('wrong');
-                document.querySelectorAll('.answer-btn')[q.correct].classList.add('correct');
-            }
-            
-            feedback.style.display = 'block';
-            document.getElementById('nextBtn').style.display = 'block';
-            
-            // עדכן לוח ניקוד
-            updateScoreboard();
-        }
-        
-        function nextQuestion() {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
-                showQuestion();
-            } else {
-                endQuiz();
-            }
-        }
-        
-        function endQuiz() {
-            const percentage = Math.round((answeredCorrectly / totalQuestions) * 100);
-            alert(`🎊 סיימת את החידון!\n\nתוצאות:\n✅ ${answeredCorrectly} מתוך ${totalQuestions} תשובות נכונות\n📊 ${percentage}% הצלחה\n🏆 כיתה ${currentUser.class}: ${points[currentUser.class]} נקודות`);
-            
-            // איפוס לחידון חדש
-            currentQuestionIndex = 0;
-            answeredCorrectly = 0;
-            showQuestion();
-        }
-        
-        function updateScoreboard() {
-            const board = document.getElementById('scoreboard');
-            if (!board) return;
-            
-            board.innerHTML = '';
-            
-            classes.forEach(cls => {
-                const item = document.createElement('div');
-                item.className = 'score-item';
-                if (cls === currentUser?.class) {
-                    item.classList.add('highlight');
+            // Process based on question type
+            if (type === 'multiple-choice') {
+                const optionsText = document.getElementById('optionsText').value.trim();
+                if (!optionsText) {
+                    alert('Please enter options!');
+                    return;
                 }
-                item.innerHTML = `
-                    <div style="font-weight: bold; color: #ffca28;">${cls}</div>
-                    <div style="font-size: 1.5rem; color: #4fc3f7; font-weight: bold;">
-                        ${points[cls] || 0}
-                    </div>
-                `;
-                board.appendChild(item);
+                
+                const options = optionsText.split('\n').map(opt => opt.trim()).filter(opt => opt);
+                const correctOptions = options.filter(opt => opt.startsWith('*'));
+                
+                if (correctOptions.length === 0) {
+                    alert('Please mark at least one correct answer with *');
+                    return;
+                }
+                
+                newQuestion.options = options.map(opt => opt.replace('*', ''));
+                newQuestion.answer = correctOptions.map(opt => opt.replace('*', ''));
+                
+            } else if (type === 'true-false') {
+                newQuestion.answer = document.getElementById('trueFalseAnswer').value;
+                
+            } else if (type === 'fill-blank') {
+                const answer = document.getElementById('blankAnswer').value.trim();
+                if (!answer) {
+                    alert('Please enter the correct answer!');
+                    return;
+                }
+                newQuestion.answer = answer;
+            }
+            
+            // Add to questions array
+            questions.push(newQuestion);
+            
+            // Save to localStorage
+            localStorage.setItem('quizQuestions', JSON.stringify(questions));
+            
+            // Reset form and show success
+            document.getElementById('questionForm').reset();
+            alert('Question added successfully!');
+            
+            // Go back to teacher mode menu
+            showTeacherMode();
+        }
+        
+        // Display all questions
+        function displayAllQuestions() {
+            const container = document.getElementById('questionsList');
+            
+            if (questions.length === 0) {
+                container.innerHTML = '<p>No questions yet. Add some questions first!</p>';
+                return;
+            }
+            
+            let html = `<p>Total questions: ${questions.length}</p>`;
+            
+            questions.forEach((q, index) => {
+                html += `<div class="question-item">
+                    <strong>Q${index + 1} (${q.type}):</strong> ${q.question}`;
+                
+                if (q.type === 'multiple-choice' && q.options) {
+                    html += `<div class="options-container">`;
+                    q.options.forEach(option => {
+                        const isCorrect = q.answer && q.answer.includes(option);
+                        html += `<div class="option-item">${option} ${isCorrect ? '✅' : ''}</div>`;
+                    });
+                    html += `</div>`;
+                } else if (q.type === 'true-false') {
+                    html += `<div><em>Correct answer: ${q.answer}</em></div>`;
+                } else if (q.type === 'fill-blank') {
+                    html += `<div><em>Correct answer: "${q.answer}"</em></div>`;
+                }
+                
+                html += `</div>`;
             });
+            
+            container.innerHTML = html;
         }
         
-        function updateUserInfo() {
-            if (!currentUser) return;
-            const className = currentUser.class;
-            document.getElementById('classInfo').textContent = 
-                `כיתה ${className}: ${points[className] || 0} נקודות`;
-        }
-        
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => {
-                s.classList.remove('active');
-            });
-            document.getElementById(screenId).classList.add('active');
-        }
-        
-        function logout() {
-            if (confirm('לצאת מהמערכת?')) {
-                currentUser = null;
-                currentQuestionIndex = 0;
-                answeredCorrectly = 0;
-                showScreen('loginScreen');
-                document.getElementById('userName').value = '';
-                document.getElementById('userClass').value = '';
+        // Clear all questions
+        function clearAllQuestions() {
+            if (confirm('Are you sure you want to delete ALL questions? This cannot be undone!')) {
+                questions = [];
+                localStorage.removeItem('quizQuestions');
+                alert('All questions have been cleared!');
+                if (document.getElementById('viewQuestions').classList.contains('hidden')) {
+                    showViewQuestions();
+                } else {
+                    displayAllQuestions();
+                }
             }
         }
         
-        // ================ אתחול ================
-        function init() {
-            // טען נקודות מקומיות (לגיבוי)
-            loadLocal();
-            
-            // התחל Firebase
-            initFirebase();
-            
-            // עדכן לוח ניקוד ראשוני
-            updateScoreboard();
+        // Quiz functions (placeholder - from first code)
+        function startQuiz(type) {
+            alert(`Starting ${type} quiz...\n\nThis is a placeholder. You would implement the actual quiz logic here.\n\nQuestions in storage: ${questions.length}`);
         }
         
-        // הפעל כשהדף נטען
-        window.onload = init;
+        function exitGame() {
+            if (confirm('Are you sure you want to exit?')) {
+                alert('Thank you for playing!');
+                // In a real app, you might close the window or redirect
+            }
+        }
     </script>
 </body>
 </html>
