@@ -485,232 +485,152 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
-    <div class="main-container">
-        <!-- הדר טורניר -->
-        <div class="tournament-header">
-            <h1 class="tournament-title">🚀 טורניר החלל הבית ספרי</h1>
-            <p class="tournament-subtitle">חידון חלל אינטראקטיבי - כיתות ז'-ט'</p>
-        </div>
-        
+    <div class="container">
         <!-- סטטוס חיבור -->
-        <div id="statusBar" class="status-bar status-offline">
+        <div id="status" class="status offline">
             🔄 מתחבר לענן...
         </div>
         
-        <!-- ניווט ראשי -->
-        <div class="nav-buttons" id="mainNav" style="display: none;">
-            <button class="nav-btn" onclick="showScreen('quizScreen')">
-                <span>🎮</span> התחל חידון
-            </button>
-            <button class="nav-btn active" onclick="showScreen('scoreboardScreen')">
-                <span>🏆</span> לוח ניקוד
-            </button>
-            <button class="nav-btn" onclick="showScreen('teacherScreen')">
-                <span>👨‍🏫</span> ניהול מורה
-            </button>
-            <button class="nav-btn" onclick="logout()">
-                <span>🚪</span> יציאה
-            </button>
-        </div>
-        
-        <!-- מסך בחירת תפקיד -->
-        <div id="roleScreen" class="screen active">
-            <div class="login-form">
-                <h2 class="form-title">התחברות למערכת</h2>
-                
-                <div class="nav-buttons" style="margin-top: 30px;">
-                    <button class="nav-btn" onclick="showScreen('studentLogin')">
-                        <span>👨‍🎓</span> תלמיד/ה
-                    </button>
-                    <button class="nav-btn" onclick="showScreen('teacherLogin')">
-                        <span>👨‍🏫</span> מורה
-                    </button>
-                </div>
+        <!-- מסך בחירת סוג משתמש -->
+        <div class="screen active" id="roleScreen">
+            <div class="header">
+                <h1>🚀 חידון חלל בית ספרי</h1>
+                <p>בחרו סוג משתמש</p>
+            </div>
+            
+            <div style="text-align: center;">
+                <button class="btn" onclick="showScreen('studentLogin')">תלמיד/ה</button>
+                <button class="btn btn-teacher" onclick="showScreen('teacherLogin')">מורה</button>
             </div>
         </div>
         
         <!-- התחברות תלמיד -->
-        <div id="studentLogin" class="screen">
-            <div class="login-form">
-                <h2 class="form-title">התחברות תלמיד</h2>
-                
-                <div class="input-group">
-                    <label for="studentName">שם מלא:</label>
-                    <input type="text" id="studentName" placeholder="הכניסו את שמכם המלא">
-                </div>
-                
-                <div class="input-group">
-                    <label for="studentClass">בחרו כיתה:</label>
-                    <select id="studentClass">
-                        <option value="">-- בחרו כיתה --</option>
-                        <option value="ז1">ז1</option>
-                        <option value="ז2">ז2</option>
-                        <option value="ז3">ז3</option>
-                        <option value="ז4">ז4</option>
-                        <option value="ז5">ז5</option>
-                        <option value="ז6">ז6</option>
-                        <option value="ז7">ז7</option>
-                        <option value="ח1">ח1</option>
-                        <option value="ח2">ח2</option>
-                        <option value="ח3">ח3</option>
-                        <option value="ח4">ח4</option>
-                        <option value="ח5">ח5</option>
-                        <option value="ח6">ח6</option>
-                        <option value="ט1">ט1</option>
-                        <option value="ט2">ט2</option>
-                        <option value="ט3">ט3</option>
-                        <option value="ט4">ט4</option>
-                        <option value="ט5">ט5</option>
-                        <option value="ט6">ט6</option>
-                    </select>
-                </div>
-                
-                <div style="text-align: center; margin-top: 30px;">
-                    <button class="nav-btn" onclick="login('student')" style="padding: 16px 40px;">
-                        <span>🚀</span> התחל חידון
-                    </button>
-                    <button class="nav-btn" onclick="showScreen('roleScreen')" style="background: #666; margin-top: 15px;">
-                        <span>↩️</span> חזרה
-                    </button>
-                </div>
+        <div class="screen" id="studentLogin">
+            <div class="header">
+                <h2>התחברות תלמיד</h2>
+            </div>
+            
+            <div style="text-align: center;">
+                <input type="text" id="studentName" placeholder="שמך המלא">
+                <select id="studentClass">
+                    <option value="">בחר כיתה</option>
+                    <option value="ז1">ז1</option><option value="ז2">ז2</option>
+                    <option value="ז3">ז3</option><option value="ז4">ז4</option>
+                    <option value="ז5">ז5</option><option value="ז6">ז6</option>
+                    <option value="ז7">ז7</option><option value="ח1">ח1</option>
+                    <option value="ח2">ח2</option><option value="ח3">ח3</option>
+                    <option value="ח4">ח4</option><option value="ח5">ח5</option>
+                    <option value="ח6">ח6</option><option value="ט1">ט1</option>
+                    <option value="ט2">ט2</option><option value="ט3">ט3</option>
+                    <option value="ט4">ט4</option><option value="ט5">ט5</option>
+                    <option value="ט6">ט6</option>
+                </select>
+                <br>
+                <button class="btn" onclick="login('student')">כניסה לחידון</button>
+                <button class="btn btn-red" onclick="showScreen('roleScreen')">חזרה</button>
             </div>
         </div>
         
         <!-- התחברות מורה -->
-        <div id="teacherLogin" class="screen">
-            <div class="login-form">
-                <h2 class="form-title">התחברות מורה</h2>
-                
-                <div class="input-group">
-                    <label for="teacherName">שם המורה:</label>
-                    <input type="text" id="teacherName" placeholder="שם המורה">
-                </div>
-                
-                <div class="input-group">
-                    <label for="teacherPassword">סיסמת מורה:</label>
-                    <input type="password" id="teacherPassword">
-                </div>
-                
-                <div class="input-group">
-                    <label for="teacherClass">בחרו כיתה:</label>
-                    <select id="teacherClass">
-                        <option value="">-- בחרו כיתה --</option>
-                        <option value="ז1">ז1</option>
-                        <option value="ז2">ז2</option>
-                        <option value="ז3">ז3</option>
-                        <option value="ז4">ז4</option>
-                        <option value="ז5">ז5</option>
-                        <option value="ז6">ז6</option>
-                        <option value="ז7">ז7</option>
-                        <option value="ח1">ח1</option>
-                        <option value="ח2">ח2</option>
-                        <option value="ח3">ח3</option>
-                        <option value="ח4">ח4</option>
-                        <option value="ח5">ח5</option>
-                        <option value="ח6">ח6</option>
-                        <option value="ט1">ט1</option>
-                        <option value="ט2">ט2</option>
-                        <option value="ט3">ט3</option>
-                        <option value="ט4">ט4</option>
-                        <option value="ט5">ט5</option>
-                        <option value="ט6">ט6</option>
-                    </select>
-                </div>
-                
-                <div style="text-align: center; margin-top: 30px;">
-                    <button class="nav-btn" onclick="login('teacher')" style="padding: 16px 40px; background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);">
-                        <span>👨‍🏫</span> כניסה למערכת מורים
-                    </button>
-                    <button class="nav-btn" onclick="showScreen('roleScreen')" style="background: #666; margin-top: 15px;">
-                        <span>↩️</span> חזרה
-                    </button>
-                </div>
+        <div class="screen" id="teacherLogin">
+            <div class="header">
+                <h2>התחברות מורה</h2>
+          
+            </div>
+            
+            <div style="text-align: center;">
+                <input type="text" id="teacherName" placeholder="שם המורה">
+                <input type="password" id="teacherPassword" placeholder="סיסמת מורה">
+                <select id="teacherClass">
+                    <option value="">בחר כיתה</option>
+                    <option value="ז1">ז1</option><option value="ז2">ז2</option>
+                    <option value="ז3">ז3</option><option value="ז4">ז4</option>
+                    <option value="ז5">ז5</option><option value="ז6">ז6</option>
+                    <option value="ז7">ז7</option><option value="ח1">ח1</option>
+                    <option value="ח2">ח2</option><option value="ח3">ח3</option>
+                    <option value="ח4">ח4</option><option value="ח5">ח5</option>
+                    <option value="ח6">ח6</option><option value="ט1">ט1</option>
+                    <option value="ט2">ט2</option><option value="ט3">ט3</option>
+                    <option value="ט4">ט4</option><option value="ט5">ט5</option>
+                    <option value="ט6">ט6</option>
+                </select>
+                <br>
+                <button class="btn btn-teacher" onclick="login('teacher')">כניסה למערכת מורים</button>
+                <button class="btn btn-red" onclick="showScreen('roleScreen')">חזרה</button>
             </div>
         </div>
         
-        <!-- מסך חידון -->
-        <div id="quizScreen" class="screen">
-            <div class="quiz-container">
-                <div style="text-align: center; margin-bottom: 25px;">
-                    <h2 style="color: #00b4d8; font-size: 1.8rem;">👨‍🚀 שלום, <span id="studentNameDisplay"></span>!</h2>
-                    <p style="color: #90e0ef; font-size: 1.1rem;">כיתה: <span id="studentClassDisplay" style="font-weight: bold; color: #48cae4;"></span></p>
+        <!-- מסך תלמיד (חידון) -->
+        <div class="screen" id="studentScreen">
+            <div class="header">
+                <h2 id="studentWelcome"></h2>
+                <p id="studentClassInfo"></p>
+            </div>
+            
+            <div class="progress">
+                שאלה <span id="currentQuestionNum">1</span> מתוך 50
+            </div>
+            
+            <div class="quiz-box">
+                <div class="question" id="questionText"></div>
+                <div class="answers" id="answers"></div>
+            </div>
+            
+            <div class="feedback" id="feedback"></div>
+            
+            <div style="text-align: center;">
+                <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">שאלה הבאה</button>
+            </div>
+            
+            <div class="scoreboard">
+                <h3 style="text-align: center; color: #ffca28;">🏆 לוח ניקוד כיתות</h3>
+                <div class="score-grid" id="scoreboard"></div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-red" onclick="logout()">יציאה מהמערכת</button>
+            </div>
+        </div>
+        
+        <!-- מסך מורה (ניהול) -->
+        <div class="screen" id="teacherScreen">
+            <div class="header">
+                <h2 id="teacherWelcome"></h2>
+                <p id="teacherClassInfo"></p>
+            </div>
+            
+            <div class="teacher-controls">
+                <h3 style="text-align: center; color: #ff9800;">⚙️ ניהול כיתה</h3>
+                <div class="teacher-buttons">
+                    <button class="teacher-btn" onclick="addPoints(1)">+1 נקודה</button>
+                    <button class="teacher-btn" onclick="addPoints(5)">+5 נקודות</button>
+                    <button class="teacher-btn" onclick="addPoints(10)">+10 נקודות</button>
+                    <button class="teacher-btn" onclick="subtractPoints(1)">-1 נקודה</button>
+                    <button class="teacher-btn" onclick="resetClassPoints()">אפס נקודות לכיתה</button>
                 </div>
                 
-                <div class="question-counter">
-                    שאלה <span id="currentQuestionNum">1</span> מתוך 50
-                </div>
-                
-                <div class="question-box">
-                    <div class="question-text" id="questionText"></div>
-                    <div class="answers-grid" id="answers"></div>
-                </div>
-                
-                <div class="feedback-box" id="feedback"></div>
-                
-                <div style="text-align: center; margin-top: 30px;">
-                    <button class="nav-btn" id="nextBtn" onclick="nextQuestion()" style="display: none; padding: 16px 40px;">
-                        <span>➡️</span> שאלה הבאה
-                    </button>
+                <div style="text-align: center; margin-top: 15px;">
+                    <input type="number" id="customPoints" placeholder="מספר נקודות" style="width: 150px;">
+                    <button class="teacher-btn" onclick="addCustomPoints()">הוסף נקודות</button>
                 </div>
             </div>
             
-            <div class="scoreboard-container">
-                <div class="scoreboard-header">
-                    <h2 class="scoreboard-title">🏆 לוח ניקוד</h2>
-                    <p class="scoreboard-subtitle">צבירת נקודות בזמן אמת</p>
+            <div class="teacher-controls">
+                <h3 style="text-align: center; color: #ff9800;">⚡ פעולות מערכת</h3>
+                <div class="teacher-buttons">
+                    <button class="teacher-btn" onclick="resetAllPoints()" style="background: #f44336; color: white;">אפס כל הנקודות</button>
+                    <button class="teacher-btn" onclick="exportPoints()">ייצוא נתונים</button>
+                    <button class="teacher-btn" onclick="showAllPoints()">הצג כל הנקודות</button>
                 </div>
-                <div class="score-grid" id="scoreboardQuiz"></div>
             </div>
-        </div>
-        
-        <!-- מסך לוח ניקוד -->
-        <div id="scoreboardScreen" class="screen">
-            <div class="scoreboard-container">
-                <div class="scoreboard-header">
-                    <h2 class="scoreboard-title">🏆 טבלת התוצאות</h2>
-                    <p class="scoreboard-subtitle">חידון החלל הבית ספרי - עדכון בזמן אמת</p>
-                </div>
-                <div class="score-grid" id="scoreboardMain"></div>
-            </div>
-        </div>
-        
-        <!-- מסך מורה -->
-        <div id="teacherScreen" class="screen">
-            <div class="scoreboard-container">
-                <div class="scoreboard-header">
-                    <h2 class="scoreboard-title">👨‍🏫 פאנל ניהול מורה</h2>
-                    <p class="scoreboard-subtitle">כיתה: <span id="teacherClassDisplay" style="color: #ff9800; font-weight: bold;"></span></p>
-                </div>
+            
+            <div class="scoreboard">
+                <h3 style="text-align: center; color: #ffca28;">🏆 לוח ניקוד כל הכיתות</h3>
                 <div class="score-grid" id="teacherScoreboard"></div>
             </div>
             
-            <div class="teacher-controls">
-                <h3 class="teacher-title">ניהול נקודות לכיתה</h3>
-                
-                <div class="control-buttons">
-                    <button class="control-btn" onclick="teacherAddPoints(1)">+1 נקודה</button>
-                    <button class="control-btn" onclick="teacherAddPoints(5)">+5 נקודות</button>
-                    <button class="control-btn" onclick="teacherAddPoints(10)">+10 נקודות</button>
-                    <button class="control-btn" onclick="teacherSubtractPoints(1)">-1 נקודה</button>
-                </div>
-                
-                <div class="custom-points">
-                    <input type="number" id="customPointsInput" placeholder="מספר נקודות" min="1" max="100">
-                    <button class="control-btn" onclick="teacherAddCustomPoints()" style="padding: 14px 25px;">
-                        הוסף נקודות
-                    </button>
-                </div>
-            </div>
-            
-            <div class="teacher-controls">
-                <h3 class="teacher-title">פעולות ניהול</h3>
-                
-                <div class="control-buttons">
-                    <button class="control-btn" onclick="teacherResetClass()">אפס נקודות לכיתה</button>
-                    <button class="control-btn danger" onclick="teacherResetAll()">אפס כל הנקודות</button>
-                    <button class="control-btn" onclick="teacherShowAllPoints()">הצג כל הנקודות</button>
-                    <button class="control-btn" onclick="teacherExportData()">ייצא נתונים</button>
-                </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-red" onclick="logout()">יציאה מהמערכת</button>
             </div>
         </div>
     </div>
@@ -795,35 +715,44 @@
         // ================ Firebase ================
         function initFirebase() {
             try {
+                console.log("מתחבר ל-Firebase...");
                 firebase.initializeApp(firebaseConfig);
                 db = firebase.database();
                 
+                // בדיקת חיבור
                 const connectedRef = db.ref('.info/connected');
                 connectedRef.on('value', (snap) => {
                     const connected = snap.val() === true;
                     updateStatus(connected);
                     
                     if (connected) {
+                        console.log("✅ מחובר לענן!");
                         setupDatabase();
                     }
                 });
                 
             } catch (error) {
+                console.error("❌ שגיאת Firebase:", error);
                 updateStatus(false);
+                alert("לא ניתן להתחבר לענן. המערכת תעבוד מקומית.");
             }
         }
         
         function setupDatabase() {
             pointsRef = db.ref('points');
             
+            // האזנה לשינויים בזמן אמת
             pointsRef.on('value', (snapshot) => {
                 const data = snapshot.val() || {};
                 
+                // עדכון נקודות
                 classes.forEach(cls => {
                     points[cls] = data[cls] || 0;
                 });
                 
-                updateAllScoreboards();
+                // עדכון תצוגה
+                updateScoreboards();
+                updateUserInfo();
             });
         }
         
@@ -836,6 +765,7 @@
             try {
                 await pointsRef.set(points);
             } catch (error) {
+                console.error("שגיאה בשמירה לענן:", error);
                 saveLocal();
             }
         }
@@ -854,13 +784,13 @@
         }
         
         function updateStatus(connected) {
-            const statusEl = document.getElementById('statusBar');
+            const statusEl = document.getElementById('status');
             if (connected) {
-                statusEl.textContent = "✅ מחובר לענן - נקודות מעודכנות בזמן אמת";
-                statusEl.className = "status-bar status-online";
+                statusEl.textContent = "✅ מחובר לענן - נקודות משותפות";
+                statusEl.className = "status online";
             } else {
                 statusEl.textContent = "⚠️ מצב מקלי - נקודות נשמרות במחשב זה בלבד";
-                statusEl.className = "status-bar status-offline";
+                statusEl.className = "status offline";
             }
         }
         
@@ -888,12 +818,12 @@
                 role: 'student' 
             };
             
-            document.getElementById('studentNameDisplay').textContent = name;
-            document.getElementById('studentClassDisplay').textContent = className;
+            document.getElementById('studentWelcome').textContent = `שלום ${name}!`;
+            document.getElementById('studentClassInfo').textContent = `כיתה ${className}`;
             
-            document.getElementById('mainNav').style.display = 'flex';
-            showScreen('quizScreen');
+            showScreen('studentScreen');
             showQuestion();
+            updateScoreboards();
         }
         
         function loginTeacher() {
@@ -917,10 +847,11 @@
                 role: 'teacher' 
             };
             
-            document.getElementById('teacherClassDisplay').textContent = className;
+            document.getElementById('teacherWelcome').textContent = `מורה ${name}`;
+            document.getElementById('teacherClassInfo').textContent = `כיתה ${className}`;
             
-            document.getElementById('mainNav').style.display = 'flex';
             showScreen('teacherScreen');
+            updateScoreboards();
         }
         
         // ================ פונקציות חידון ================
@@ -953,24 +884,29 @@
             const q = questions[currentQuestionIndex];
             const feedback = document.getElementById('feedback');
             
+            // חסימת כפתורים
             document.querySelectorAll('.answer-btn').forEach(btn => {
                 btn.disabled = true;
             });
             
             if (answerIndex === q.correct) {
                 feedback.innerHTML = '🎉 תשובה נכונה! +1 נקודה לכיתה!';
-                feedback.className = 'feedback-box feedback-correct';
+                feedback.className = 'feedback correct-feedback';
                 
+                // הוסף נקודה לכיתה
                 points[currentUser.class] = (points[currentUser.class] || 0) + 1;
                 answeredCorrectly++;
                 
+                // שמור נקודות בענן
                 saveToCloud();
                 
+                // סמן תשובה נכונה
                 document.querySelectorAll('.answer-btn')[q.correct].classList.add('correct');
             } else {
                 feedback.innerHTML = `❌ לא נכון. התשובה הנכונה: ${q.answers[q.correct]}`;
-                feedback.className = 'feedback-box feedback-wrong';
+                feedback.className = 'feedback wrong-feedback';
                 
+                // סמן תשובות שגויות ונכונות
                 document.querySelectorAll('.answer-btn')[answerIndex].classList.add('wrong');
                 document.querySelectorAll('.answer-btn')[q.correct].classList.add('correct');
             }
@@ -978,7 +914,8 @@
             feedback.style.display = 'block';
             document.getElementById('nextBtn').style.display = 'block';
             
-            updateAllScoreboards();
+            // עדכן לוח ניקוד
+            updateScoreboards();
         }
         
         function nextQuestion() {
@@ -994,36 +931,37 @@
             const percentage = Math.round((answeredCorrectly / totalQuestions) * 100);
             alert(`🎊 סיימת את החידון!\n\nתוצאות:\n✅ ${answeredCorrectly} מתוך ${totalQuestions} תשובות נכונות\n📊 ${percentage}% הצלחה\n🏆 כיתה ${currentUser.class}: ${points[currentUser.class]} נקודות`);
             
+            // איפוס לחידון חדש
             currentQuestionIndex = 0;
             answeredCorrectly = 0;
             showQuestion();
         }
         
         // ================ פונקציות מורה ================
-        function teacherAddPoints(amount) {
+        function addPoints(amount) {
             if (!currentUser || currentUser.role !== 'teacher') return;
             
             points[currentUser.class] = (points[currentUser.class] || 0) + amount;
             saveToCloud();
-            updateAllScoreboards();
+            updateScoreboards();
             alert(`נוספו ${amount} נקודות לכיתה ${currentUser.class}`);
         }
         
-        function teacherSubtractPoints(amount) {
+        function subtractPoints(amount) {
             if (!currentUser || currentUser.role !== 'teacher') return;
             
             if (points[currentUser.class] >= amount) {
                 points[currentUser.class] -= amount;
                 saveToCloud();
-                updateAllScoreboards();
+                updateScoreboards();
                 alert(`הופחתו ${amount} נקודות מכיתה ${currentUser.class}`);
             } else {
                 alert('אין מספיק נקודות להפחתה');
             }
         }
         
-        function teacherAddCustomPoints() {
-            const input = document.getElementById('customPointsInput');
+        function addCustomPoints() {
+            const input = document.getElementById('customPoints');
             const amount = parseInt(input.value);
             
             if (isNaN(amount) || amount < 1) {
@@ -1031,22 +969,22 @@
                 return;
             }
             
-            teacherAddPoints(amount);
+            addPoints(amount);
             input.value = '';
         }
         
-        function teacherResetClass() {
+        function resetClassPoints() {
             if (!currentUser || currentUser.role !== 'teacher') return;
             
             if (confirm(`האם לאפס את הנקודות של כיתה ${currentUser.class}?`)) {
                 points[currentUser.class] = 0;
                 saveToCloud();
-                updateAllScoreboards();
+                updateScoreboards();
                 alert(`נקודות כיתה ${currentUser.class} אופסו`);
             }
         }
         
-        function teacherResetAll() {
+        function resetAllPoints() {
             if (!currentUser || currentUser.role !== 'teacher') return;
             
             if (confirm('⚠️ האם לאפס את כל הנקודות של כל הכיתות?\nפעולה זו לא ניתנת לביטול!')) {
@@ -1054,12 +992,12 @@
                     points[cls] = 0;
                 });
                 saveToCloud();
-                updateAllScoreboards();
+                updateScoreboards();
                 alert('כל הנקודות אופסו');
             }
         }
         
-        function teacherShowAllPoints() {
+        function showAllPoints() {
             if (!currentUser || currentUser.role !== 'teacher') return;
             
             let message = "נקודות כל הכיתות:\n\n";
@@ -1069,23 +1007,27 @@
             alert(message);
         }
         
-        function teacherExportData() {
+        function exportPoints() {
             if (!currentUser || currentUser.role !== 'teacher') return;
             
             const dataStr = JSON.stringify(points, null, 2);
             const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
             
+            const exportFileDefaultName = 'נקודות_כיתות.json';
+            
             const linkElement = document.createElement('a');
             linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', 'נקודות_כיתות.json');
+            linkElement.setAttribute('download', exportFileDefaultName);
             linkElement.click();
+            
+            alert('הנתונים יוצאו לקובץ JSON');
         }
         
         // ================ פונקציות תצוגה ================
-        function updateAllScoreboards() {
-            updateScoreboard('scoreboardQuiz');
-            updateScoreboard('scoreboardMain');
+        function updateScoreboards() {
+            updateScoreboard('scoreboard');
             updateScoreboard('teacherScoreboard');
+            updateUserInfo();
         }
         
         function updateScoreboard(boardId) {
@@ -1095,18 +1037,32 @@
             board.innerHTML = '';
             
             classes.forEach(cls => {
-                const card = document.createElement('div');
-                card.className = 'score-card';
+                const item = document.createElement('div');
+                item.className = 'score-item';
                 if (cls === currentUser?.class) {
-                    card.classList.add('highlight');
+                    item.classList.add('highlight');
                 }
-                card.innerHTML = `
-                    <div class="class-name">${cls}</div>
-                    <div class="class-points">${points[cls] || 0}</div>
-                    <div class="points-label">נקודות</div>
+                item.innerHTML = `
+                    <div style="font-weight: bold; color: #ffca28;">${cls}</div>
+                    <div style="font-size: 1.5rem; color: #4fc3f7; font-weight: bold;">
+                        ${points[cls] || 0}
+                    </div>
                 `;
-                board.appendChild(card);
+                board.appendChild(item);
             });
+        }
+        
+        function updateUserInfo() {
+            if (!currentUser) return;
+            
+            const className = currentUser.class;
+            if (currentUser.role === 'student') {
+                document.getElementById('studentClassInfo').textContent = 
+                    `כיתה ${className}: ${points[className] || 0} נקודות`;
+            } else {
+                document.getElementById('teacherClassInfo').textContent = 
+                    `כיתה ${className}: ${points[className] || 0} נקודות`;
+            }
         }
         
         function showScreen(screenId) {
@@ -1114,21 +1070,6 @@
                 s.classList.remove('active');
             });
             document.getElementById(screenId).classList.add('active');
-            
-            // עדכן כפתור פעיל
-            if (document.getElementById('mainNav')) {
-                document.querySelectorAll('#mainNav .nav-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                
-                if (screenId === 'quizScreen') {
-                    document.querySelectorAll('#mainNav .nav-btn')[0].classList.add('active');
-                } else if (screenId === 'scoreboardScreen') {
-                    document.querySelectorAll('#mainNav .nav-btn')[1].classList.add('active');
-                } else if (screenId === 'teacherScreen') {
-                    document.querySelectorAll('#mainNav .nav-btn')[2].classList.add('active');
-                }
-            }
         }
         
         function logout() {
@@ -1136,34 +1077,28 @@
                 currentUser = null;
                 currentQuestionIndex = 0;
                 answeredCorrectly = 0;
-                
-                document.getElementById('mainNav').style.display = 'none';
                 showScreen('roleScreen');
                 
+                // נקה שדות התחברות
                 document.getElementById('studentName').value = '';
                 document.getElementById('studentClass').value = '';
                 document.getElementById('teacherName').value = '';
                 document.getElementById('teacherPassword').value = '';
                 document.getElementById('teacherClass').value = '';
-                document.getElementById('customPointsInput').value = '';
+                document.getElementById('customPoints').value = '';
             }
         }
         
         // ================ אתחול ================
         function init() {
+            // טען נקודות מקומיות
             loadLocal();
-            initFirebase();
-            updateAllScoreboards();
             
-            // הגדר אירועי מקלדת
-            document.addEventListener('keydown', (e) => {
-                if (e.key === '1' || e.key === '2' || e.key === '3' || e.key === '4') {
-                    const index = parseInt(e.key) - 1;
-                    if (document.getElementById('answers').children.length > index) {
-                        document.getElementById('answers').children[index].click();
-                    }
-                }
-            });
+            // התחל Firebase
+            initFirebase();
+            
+            // עדכן לוח ניקוד ראשוני
+            updateScoreboards();
         }
         
         // הפעל כשהדף נטען
