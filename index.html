@@ -618,7 +618,7 @@
                 
                 <div class="input-group">
                     <label for="teacherPassword">סיסמת מורה:</label>
-                    <input type="password" id="teacherPassword" placeholder="סיסמת המורה">
+                    <input type="password" id="teacherPassword" placeholder="סיסמת מורה">
                 </div>
                 
                 <div class="input-group">
@@ -757,58 +757,58 @@
             appId: "1:919939980128:web:53c7b02240b9ac8347dc05"
         };
         
-        // ================ 50 שאלות חלל ================
-        const questions = [
-            {question: "איזה כוכב לכת נקרא 'כוכב הלכת האדום'?", answers: ["נוגה", "מאדים", "צדק", "שבתאי"], correct: 1},
-            {question: "מהו כוכב הלכת הגדול ביותר במערכת השמש?", answers: ["כדור הארץ", "שבתאי", "צדק", "נפטון"], correct: 2},
-            {question: "מי היה האדם הראשון שצעד על הירח?", answers: ["יורי גגארין", "באז אולדרין", "ניל ארמסטרונג", "מייקל קולינס"], correct: 2},
-            {question: "מה שמה של הגלקסיה שלנו?", answers: ["אנדרומדה", "שביל החלב", "גלקסיית הסומבררו", "גלקסיית המערבולת"], correct: 1},
-            {question: "איזה כוכב לכת ידוע בטבעותיו המרהיבות?", answers: ["צדק", "נפטון", "אורנוס", "שבתאי"], correct: 3},
-            {question: "איזה כוכב לכת הוא הקרוב ביותר לשמש?", answers: ["נוגה", "כדור הארץ", "חמה", "מאדים"], correct: 2},
-            {question: "מהו הירח הגדול ביותר של שבתאי?", answers: ["אירופה", "טיטאן", "גנימד", "קליסטו"], correct: 1},
-            {question: "איזה כוכב לכת יש לו הכתם האדום הגדול?", answers: ["מאדים", "צדק", "שבתאי", "נפטון"], correct: 1},
-            {question: "מהו כוכב הלכת החם ביותר במערכת השמש?", answers: ["חמה", "נוגה", "כדור הארץ", "מאדים"], correct: 1},
-            {question: "איזה כוכב לכת נקרא 'כוכב הלכת הכחול'?", answers: ["כדור הארץ", "נפטון", "אורנוס", "צדק"], correct: 0},
-            {question: "מהו כוכב הלכת עם הזמן הקצר ביותר לסיבוב סביב השמש?", answers: ["חמה", "נוגה", "כדור הארץ", "מאדים"], correct: 0},
-            {question: "איזה כוכב לכת יש לו 27 ירחים ידועים?", answers: ["צדק", "שבתאי", "אורנוס", "נפטון"], correct: 2},
-            {question: "מהו כוכב הלכת הקטן ביותר במערכת השמש?", answers: ["חמה", "מאדים", "נוגה", "פלוטו"], correct: 0},
-            {question: "איזה כוכב לכת מסתובב על צידו?", answers: ["שבתאי", "נפטון", "אורנוס", "צדק"], correct: 2},
-            {question: "מהו כוכב הלכת עם רוח הכי חזקה?", answers: ["צדק", "שבתאי", "נפטון", "אורנוס"], correct: 2},
-            {question: "איזה כוכב לכת יש לו את היום הארוך ביותר?", answers: ["נוגה", "צדק", "שבתאי", "נפטון"], correct: 0},
-            {question: "מהו כוכב הלכת עם הצפיפות הנמוכה ביותר?", answers: ["שבתאי", "צדק", "אורנוס", "נפטון"], correct: 0},
-            {question: "איזה כוכב לכת נקרא על שם אל הים הרומי?", answers: ["אורנוס", "נפטון", "צדק", "מאדים"], correct: 1},
-            {question: "מהו כוכב הלכת עם הירח הגדול ביותר?", answers: ["כדור הארץ", "צדק", "שבתאי", "נפטון"], correct: 1},
-            {question: "איזה כוכב לכת יש לו את הטמפרטורה הנמוכה ביותר?", answers: ["נפטון", "אורנוס", "שבתאי", "צדק"], correct: 0},
-            {question: "מה שמה של התוכנית האמריקאית לנחיתה על הירח?", answers: ["ג'מיני", "מרקורי", "אפולו", "ווסטוק"], correct: 2},
-            {question: "מי היה האסטרונאוט הישראלי הראשון?", answers: ["אילן רמון", "יוסף קריב", "דן תמיר", "אבי הר-אבן"], correct: 0},
-            {question: "מה שמה של תחנת החלל הבינלאומית?", answers: ["ISS", "MIR", "TIANGONG", "SKYLAB"], correct: 0},
-            {question: "איזה חיה הייתה הראשונה בחלל?", answers: ["קוף", "כלב", "חולדה", "ארנבת"], correct: 1},
-            {question: "מהו המכשיר המשמש לצפייה בכוכבים?", answers: ["מיקרוסקופ", "טלסקופ", "פריסקופ", "ספקטרוסקופ"], correct: 1},
-            {question: "מהו האסטרואיד הגדול ביותר בחגורת האסטרואידים?", answers: ["צרס", "וסטה", "פאלאס", "היגיאה"], correct: 0},
-            {question: "מהו סוג הטלסקופ הראשון שהומצא?", answers: ["שבירתי", "החזרי", "רדיו", "אינפרא אדום"], correct: 0},
-            {question: "איזה גוף שמימי אינו כוכב לכת?", answers: ["פלוטו", "מאדים", "נוגה", "שבתאי"], correct: 0},
-            {question: "מהו כוכב הצפון?", answers: ["סיריוס", "פולאריס", "בטלג'וז", "ריג'ל"], correct: 1},
-            {question: "מהו הכוכב הבהיר ביותר בשמי הלילה?", answers: ["סיריוס", "פולאריס", "בטלג'וז", "קאנופוס"], correct: 0},
-            {question: "מהו כוכב הלכת עם הכי הרבה ירחים?", answers: ["צדק", "שבתאי", "אורנוס", "נפטון"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את הזנב הארוך ביותר?", answers: ["שבתאי", "נפטון", "אורנוס", "צדק"], correct: 1},
-            {question: "מהו כוכב הלכת עם הכי הרבה טבעות?", answers: ["צדק", "שבתאי", "אורנוס", "נפטון"], correct: 1},
-            {question: "איזה כוכב לכת יש לו את הצבע הכחול העז ביותר?", answers: ["כדור הארץ", "נפטון", "אורנוס", "צדק"], correct: 1},
-            {question: "מהו כוכב הלכת עם הכי פחות ירחים?", answers: ["חמה", "נוגה", "מאדים", "כדור הארץ"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את הציר המוטה ביותר?", answers: ["נפטון", "אורנוס", "שבתאי", "צדק"], correct: 1},
-            {question: "מהו כוכב הלכת עם המסה הגדולה ביותר?", answers: ["צדק", "שבתאי", "נפטון", "אורנוס"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את היקף המסלול הגדול ביותר?", answers: ["נפטון", "אורנוס", "שבתאי", "צדק"], correct: 0},
-            {question: "מהו כוכב הלכת עם הצפיפות הגבוהה ביותר?", answers: ["כדור הארץ", "נוגה", "חמה", "מאדים"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את הירח היחיד?", answers: ["כדור הארץ", "מאדים", "נוגה", "חמה"], correct: 0},
-            {question: "מהו כוכב הלכת עם הזמן הארוך ביותר לסיבוב עצמי?", answers: ["נוגה", "חמה", "מאדים", "כדור הארץ"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את האטמוספירה הדקה ביותר?", answers: ["חמה", "מאדים", "נוגה", "כדור הארץ"], correct: 0},
-            {question: "מהו כוכב הלכת עם הכי הרבה הרי געש?", answers: ["נוגה", "כדור הארץ", "מאדים", "צדק"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את השדה המגנטי החזק ביותר?", answers: ["צדק", "כדור הארץ", "שבתאי", "נוגה"], correct: 0},
-            {question: "מהו כוכב הלכת עם הכי הרבה סופות?", answers: ["צדק", "שבתאי", "נפטון", "אורנוס"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את הטמפרטורה היציבה ביותר?", answers: ["כדור הארץ", "נוגה", "מאדים", "חמה"], correct: 0},
-            {question: "מהו כוכב הלכת עם הכי הרבה מים?", answers: ["כדור הארץ", "נוגה", "מאדים", "צדק"], correct: 0},
-            {question: "איזה כוכב לכת יש לו את הצבע האדום ביותר?", answers: ["מאדים", "נוגה", "כדור הארץ", "חמה"], correct: 0},
-            {question: "מהו כוכב הלכת עם הכי הרבה חיים?", answers: ["כדור הארץ", "מאדים", "נוגה", "צדק"], correct: 0},
-            {question: "איזה כוכב לכת הוא היחיד עם חיים ידועים?", answers: ["כדור הארץ", "מאדים", "נוגה", "צדק"], correct: 0}
+        // ================ 50 שאלות חלל עם מענה נכון ================
+        const baseQuestions = [
+            {question: "איזה כוכב לכת נקרא 'כוכב הלכת האדום'?", correctAnswer: "מאדים", wrongAnswers: ["נוגה", "צדק", "שבתאי"]},
+            {question: "מהו כוכב הלכת הגדול ביותר במערכת השמש?", correctAnswer: "צדק", wrongAnswers: ["כדור הארץ", "שבתאי", "נפטון"]},
+            {question: "מי היה האדם הראשון שצעד על הירח?", correctAnswer: "ניל ארמסטרונג", wrongAnswers: ["יורי גגארין", "באז אולדרין", "מייקל קולינס"]},
+            {question: "מה שמה של הגלקסיה שלנו?", correctAnswer: "שביל החלב", wrongAnswers: ["אנדרומדה", "גלקסיית הסומבררו", "גלקסיית המערבולת"]},
+            {question: "איזה כוכב לכת ידוע בטבעותיו המרהיבות?", correctAnswer: "שבתאי", wrongAnswers: ["צדק", "נפטון", "אורנוס"]},
+            {question: "איזה כוכב לכת הוא הקרוב ביותר לשמש?", correctAnswer: "חמה", wrongAnswers: ["נוגה", "כדור הארץ", "מאדים"]},
+            {question: "מהו הירח הגדול ביותר של שבתאי?", correctAnswer: "טיטאן", wrongAnswers: ["אירופה", "גנימד", "קליסטו"]},
+            {question: "איזה כוכב לכת יש לו הכתם האדום הגדול?", correctAnswer: "צדק", wrongAnswers: ["מאדים", "שבתאי", "נפטון"]},
+            {question: "מהו כוכב הלכת החם ביותר במערכת השמש?", correctAnswer: "נוגה", wrongAnswers: ["חמה", "כדור הארץ", "מאדים"]},
+            {question: "איזה כוכב לכת נקרא 'כוכב הלכת הכחול'?", correctAnswer: "כדור הארץ", wrongAnswers: ["נפטון", "אורנוס", "צדק"]},
+            {question: "מהו כוכב הלכת עם הזמן הקצר ביותר לסיבוב סביב השמש?", correctAnswer: "חמה", wrongAnswers: ["נוגה", "כדור הארץ", "מאדים"]},
+            {question: "איזה כוכב לכת יש לו 27 ירחים ידועים?", correctAnswer: "אורנוס", wrongAnswers: ["צדק", "שבתאי", "נפטון"]},
+            {question: "מהו כוכב הלכת הקטן ביותר במערכת השמש?", correctAnswer: "חמה", wrongAnswers: ["מאדים", "נוגה", "פלוטו"]},
+            {question: "איזה כוכב לכת מסתובב על צידו?", correctAnswer: "אורנוס", wrongAnswers: ["שבתאי", "נפטון", "צדק"]},
+            {question: "מהו כוכב הלכת עם רוח הכי חזקה?", correctAnswer: "נפטון", wrongAnswers: ["צדק", "שבתאי", "אורנוס"]},
+            {question: "איזה כוכב לכת יש לו את היום הארוך ביותר?", correctAnswer: "נוגה", wrongAnswers: ["צדק", "שבתאי", "נפטון"]},
+            {question: "מהו כוכב הלכת עם הצפיפות הנמוכה ביותר?", correctAnswer: "שבתאי", wrongAnswers: ["צדק", "אורנוס", "נפטון"]},
+            {question: "איזה כוכב לכת נקרא על שם אל הים הרומי?", correctAnswer: "נפטון", wrongAnswers: ["אורנוס", "צדק", "מאדים"]},
+            {question: "מהו כוכב הלכת עם הירח הגדול ביותר?", correctAnswer: "צדק", wrongAnswers: ["כדור הארץ", "שבתאי", "נפטון"]},
+            {question: "איזה כוכב לכת יש לו את הטמפרטורה הנמוכה ביותר?", correctAnswer: "נפטון", wrongAnswers: ["אורנוס", "שבתאי", "צדק"]},
+            {question: "מה שמה של התוכנית האמריקאית לנחיתה על הירח?", correctAnswer: "אפולו", wrongAnswers: ["ג'מיני", "מרקורי", "ווסטוק"]},
+            {question: "מי היה האסטרונאוט הישראלי הראשון?", correctAnswer: "אילן רמון", wrongAnswers: ["יוסף קריב", "דן תמיר", "אבי הר-אבן"]},
+            {question: "מה שמה של תחנת החלל הבינלאומית?", correctAnswer: "ISS", wrongAnswers: ["MIR", "TIANGONG", "SKYLAB"]},
+            {question: "איזה חיה הייתה הראשונה בחלל?", correctAnswer: "כלב", wrongAnswers: ["קוף", "חולדה", "ארנבת"]},
+            {question: "מהו המכשיר המשמש לצפייה בכוכבים?", correctAnswer: "טלסקופ", wrongAnswers: ["מיקרוסקופ", "פריסקופ", "ספקטרוסקופ"]},
+            {question: "מהו האסטרואיד הגדול ביותר בחגורת האסטרואידים?", correctAnswer: "צרס", wrongAnswers: ["וסטה", "פאלאס", "היגיאה"]},
+            {question: "מהו סוג הטלסקופ הראשון שהומצא?", correctAnswer: "שבירתי", wrongAnswers: ["החזרי", "רדיו", "אינפרא אדום"]},
+            {question: "איזה גוף שמימי אינו כוכב לכת?", correctAnswer: "פלוטו", wrongAnswers: ["מאדים", "נוגה", "שבתאי"]},
+            {question: "מהו כוכב הצפון?", correctAnswer: "פולאריס", wrongAnswers: ["סיריוס", "בטלג'וז", "ריג'ל"]},
+            {question: "מהו הכוכב הבהיר ביותר בשמי הלילה?", correctAnswer: "סיריוס", wrongAnswers: ["פולאריס", "בטלג'וז", "קאנופוס"]},
+            {question: "מהו כוכב הלכת עם הכי הרבה ירחים?", correctAnswer: "צדק", wrongAnswers: ["שבתאי", "אורנוס", "נפטון"]},
+            {question: "איזה כוכב לכת יש לו את הזנב הארוך ביותר?", correctAnswer: "נפטון", wrongAnswers: ["שבתאי", "אורנוס", "צדק"]},
+            {question: "מהו כוכב הלכת עם הכי הרבה טבעות?", correctAnswer: "שבתאי", wrongAnswers: ["צדק", "אורנוס", "נפטון"]},
+            {question: "איזה כוכב לכת יש לו את הצבע הכחול העז ביותר?", correctAnswer: "נפטון", wrongAnswers: ["כדור הארץ", "אורנוס", "צדק"]},
+            {question: "מהו כוכב הלכת עם הכי פחות ירחים?", correctAnswer: "חמה", wrongAnswers: ["נוגה", "מאדים", "כדור הארץ"]},
+            {question: "איזה כוכב לכת יש לו את הציר המוטה ביותר?", correctAnswer: "אורנוס", wrongAnswers: ["נפטון", "שבתאי", "צדק"]},
+            {question: "מהו כוכב הלכת עם המסה הגדולה ביותר?", correctAnswer: "צדק", wrongAnswers: ["שבתאי", "נפטון", "אורנוס"]},
+            {question: "איזה כוכב לכת יש לו את היקף המסלול הגדול ביותר?", correctAnswer: "נפטון", wrongAnswers: ["אורנוס", "שבתאי", "צדק"]},
+            {question: "מהו כוכב הלכת עם הצפיפות הגבוהה ביותר?", correctAnswer: "כדור הארץ", wrongAnswers: ["נוגה", "חמה", "מאדים"]},
+            {question: "איזה כוכב לכת יש לו את הירח היחיד?", correctAnswer: "כדור הארץ", wrongAnswers: ["מאדים", "נוגה", "חמה"]},
+            {question: "מהו כוכב הלכת עם הזמן הארוך ביותר לסיבוב עצמי?", correctAnswer: "נוגה", wrongAnswers: ["חמה", "מאדים", "כדור הארץ"]},
+            {question: "איזה כוכב לכת יש לו את האטמוספירה הדקה ביותר?", correctAnswer: "חמה", wrongAnswers: ["מאדים", "נוגה", "כדור הארץ"]},
+            {question: "מהו כוכב הלכת עם הכי הרבה הרי געש?", correctAnswer: "נוגה", wrongAnswers: ["כדור הארץ", "מאדים", "צדק"]},
+            {question: "איזה כוכב לכת יש לו את השדה המגנטי החזק ביותר?", correctAnswer: "צדק", wrongAnswers: ["כדור הארץ", "שבתאי", "נוגה"]},
+            {question: "מהו כוכב הלכת עם הכי הרבה סופות?", correctAnswer: "צדק", wrongAnswers: ["שבתאי", "נפטון", "אורנוס"]},
+            {question: "איזה כוכב לכת יש לו את הטמפרטורה היציבה ביותר?", correctAnswer: "כדור הארץ", wrongAnswers: ["נוגה", "מאדים", "חמה"]},
+            {question: "מהו כוכב הלכת עם הכי הרבה מים?", correctAnswer: "כדור הארץ", wrongAnswers: ["נוגה", "מאדים", "צדק"]},
+            {question: "איזה כוכב לכת יש לו את הצבע האדום ביותר?", correctAnswer: "מאדים", wrongAnswers: ["נוגה", "כדור הארץ", "חמה"]},
+            {question: "מהו כוכב הלכת עם הכי הרבה חיים?", correctAnswer: "כדור הארץ", wrongAnswers: ["מאדים", "נוגה", "צדק"]},
+            {question: "איזה כוכב לכת הוא היחיד עם חיים ידועים?", correctAnswer: "כדור הארץ", wrongAnswers: ["מאדים", "נוגה", "צדק"]}
         ];
         
         // ================ משתני מערכת ================
@@ -821,6 +821,55 @@
         let db = null;
         let pointsRef = null;
         const TEACHER_PASSWORD = "1957";
+        let shuffledQuestions = [];
+        let currentQuestionData = null;
+        
+        // ================ פונקציות לערבוב שאלות ================
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        function shuffleQuestions() {
+            // ערבב את השאלות עצמן
+            shuffledQuestions = shuffleArray([...baseQuestions]);
+            
+            // לכל שאלה, ערבב את התשובות
+            shuffledQuestions = shuffledQuestions.map(question => {
+                const allAnswers = [question.correctAnswer, ...question.wrongAnswers];
+                const shuffledAnswers = shuffleArray([...allAnswers]);
+                const correctIndex = shuffledAnswers.indexOf(question.correctAnswer);
+                
+                return {
+                    ...question,
+                    answers: shuffledAnswers,
+                    correct: correctIndex
+                };
+            });
+        }
+        
+        function getRandomWrongAnswers(correctAnswer, questionIndex) {
+            // אוסף כל התשובות השגויות מכל השאלות
+            let allWrongAnswers = [];
+            baseQuestions.forEach((q, idx) => {
+                if (idx !== questionIndex) {
+                    allWrongAnswers.push(...q.wrongAnswers);
+                }
+            });
+            
+            // הסר כפילויות
+            allWrongAnswers = [...new Set(allWrongAnswers)];
+            
+            // הסר את התשובה הנכונה הנוכחית
+            allWrongAnswers = allWrongAnswers.filter(answer => answer !== correctAnswer);
+            
+            // ערבב וקח 3 תשובות
+            const shuffled = shuffleArray(allWrongAnswers);
+            return shuffled.slice(0, 3);
+        }
         
         // ================ Firebase ================
         function initFirebase() {
@@ -925,6 +974,9 @@
             document.getElementById('studentNav').style.display = 'flex';
             document.getElementById('teacherNav').style.display = 'none';
             
+            // ערבב את השאלות לפני תחילת החידון
+            shuffleQuestions();
+            
             showScreen('quizScreen');
             showQuestion();
         }
@@ -961,19 +1013,20 @@
         
         // ================ פונקציות חידון ================
         function showQuestion() {
-            if (currentQuestionIndex >= questions.length) {
+            if (currentQuestionIndex >= shuffledQuestions.length) {
                 endQuiz();
                 return;
             }
             
-            const q = questions[currentQuestionIndex];
-            document.getElementById('questionText').textContent = q.question;
+            currentQuestionData = shuffledQuestions[currentQuestionIndex];
+            document.getElementById('questionText').textContent = currentQuestionData.question;
             document.getElementById('currentQuestionNum').textContent = currentQuestionIndex + 1;
             
             const answersDiv = document.getElementById('answers');
             answersDiv.innerHTML = '';
             
-            q.answers.forEach((answer, index) => {
+            // הצג תשובות מעורבבות
+            currentQuestionData.answers.forEach((answer, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'answer-btn';
                 btn.textContent = answer;
@@ -986,14 +1039,13 @@
         }
         
         function checkAnswer(answerIndex) {
-            const q = questions[currentQuestionIndex];
             const feedback = document.getElementById('feedback');
             
             document.querySelectorAll('.answer-btn').forEach(btn => {
                 btn.disabled = true;
             });
             
-            if (answerIndex === q.correct) {
+            if (answerIndex === currentQuestionData.correct) {
                 feedback.innerHTML = '🎉 תשובה נכונה! +1 נקודה לכיתה!';
                 feedback.className = 'feedback-box feedback-correct';
                 
@@ -1002,13 +1054,13 @@
                 
                 saveToCloud();
                 
-                document.querySelectorAll('.answer-btn')[q.correct].classList.add('correct');
+                document.querySelectorAll('.answer-btn')[currentQuestionData.correct].classList.add('correct');
             } else {
-                feedback.innerHTML = `❌ לא נכון. התשובה הנכונה: ${q.answers[q.correct]}`;
+                feedback.innerHTML = `❌ לא נכון. התשובה הנכונה: ${currentQuestionData.answers[currentQuestionData.correct]}`;
                 feedback.className = 'feedback-box feedback-wrong';
                 
                 document.querySelectorAll('.answer-btn')[answerIndex].classList.add('wrong');
-                document.querySelectorAll('.answer-btn')[q.correct].classList.add('correct');
+                document.querySelectorAll('.answer-btn')[currentQuestionData.correct].classList.add('correct');
             }
             
             feedback.style.display = 'block';
@@ -1019,7 +1071,7 @@
         
         function nextQuestion() {
             currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
+            if (currentQuestionIndex < shuffledQuestions.length) {
                 showQuestion();
             } else {
                 endQuiz();
@@ -1030,8 +1082,13 @@
             const percentage = Math.round((answeredCorrectly / totalQuestions) * 100);
             alert(`🎊 סיימת את החידון!\n\nתוצאות:\n✅ ${answeredCorrectly} מתוך ${totalQuestions} תשובות נכונות\n📊 ${percentage}% הצלחה\n🏆 כיתה ${currentUser.class}: ${points[currentUser.class]} נקודות`);
             
+            // איפוס לחידון חדש
             currentQuestionIndex = 0;
             answeredCorrectly = 0;
+            
+            // ערבב מחדש את השאלות לחידון הבא
+            shuffleQuestions();
+            
             showQuestion();
         }
         
@@ -1215,6 +1272,8 @@
                 currentUser = null;
                 currentQuestionIndex = 0;
                 answeredCorrectly = 0;
+                shuffledQuestions = [];
+                currentQuestionData = null;
                 
                 // הסתר את כל סרגלי הניווט
                 document.getElementById('studentNav').style.display = 'none';
