@@ -3,232 +3,480 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>חידון חלל - מורים ותלמידים</title>
+    <title>חידון חלל - לוח ניקוד דיגיטלי</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* עיצוב כללי */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box;
+        }
         
         body {
             font-family: 'Arial', sans-serif;
-            background: #0a0e27;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
             color: white;
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
         
-        .container {
-            max-width: 800px;
+        /* קונטיינר ראשי */
+        .main-container {
+            max-width: 1200px;
             margin: 0 auto;
         }
         
-        .header {
+        /* הדר - כמו בתמונה */
+        .tournament-header {
             text-align: center;
-            padding: 20px;
-            background: rgba(0,0,0,0.7);
+            padding: 25px 20px;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, rgba(0, 50, 100, 0.9) 0%, rgba(0, 100, 200, 0.9) 100%);
             border-radius: 15px;
-            margin-bottom: 20px;
-            border: 2px solid #4fc3f7;
+            border: 3px solid #00b4d8;
+            box-shadow: 0 10px 30px rgba(0, 180, 216, 0.3);
+            position: relative;
+            overflow: hidden;
         }
         
-        h1 { color: #4fc3f7; margin-bottom: 10px; }
-        h2 { color: #ffca28; margin-bottom: 15px; }
-        
-        .screen {
-            display: none;
-            background: rgba(0,0,0,0.7);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
+        .tournament-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #00b4d8, #90e0ef, #00b4d8);
+            animation: pulse 3s infinite;
         }
         
-        .active { display: block; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
         
-        .btn {
-            padding: 12px 24px;
-            margin: 10px;
-            background: #4fc3f7;
-            color: black;
+        .tournament-title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-shadow: 0 0 20px #00b4d8, 0 0 40px #0077b6;
+        }
+        
+        .tournament-subtitle {
+            font-size: 1.4rem;
+            color: #90e0ef;
+            font-weight: 300;
+            margin-bottom: 15px;
+        }
+        
+        /* ניווט בין מסכים */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #0077b6 0%, #0096c7 100%);
+            color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            display: inline-block;
-        }
-        
-        .btn-teacher {
-            background: #ff9800;
-            color: black;
-        }
-        
-        .btn-green {
-            background: #4CAF50;
-            color: white;
-        }
-        
-        .btn-red {
-            background: #f44336;
-            color: white;
-        }
-        
-        input, select {
-            padding: 12px;
-            margin: 10px;
-            width: 90%;
-            max-width: 300px;
-            border-radius: 8px;
-            border: 2px solid #4fc3f7;
-            background: #111;
-            color: white;
-            text-align: center;
-        }
-        
-        .quiz-box {
-            background: rgba(30,30,60,0.8);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border: 1px solid #4fc3f7;
-        }
-        
-        .question {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        
-        .answers {
-            display: grid;
-            grid-template-columns: 1fr;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
             gap: 10px;
-            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(0, 119, 182, 0.4);
         }
         
-        .answer-btn {
-            padding: 15px;
-            background: #1a237e;
-            color: white;
-            border: none;
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 119, 182, 0.6);
+            background: linear-gradient(135deg, #0096c7 0%, #00b4d8 100%);
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, #00b4d8 0%, #48cae4 100%);
+            box-shadow: 0 0 25px rgba(72, 202, 228, 0.7);
+        }
+        
+        /* מסכים */
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* טופס התחברות */
+        .login-form {
+            background: rgba(10, 20, 40, 0.85);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #0077b6;
+            max-width: 500px;
+            margin: 30px auto;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+        
+        .form-title {
+            text-align: center;
+            color: #00b4d8;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #90e0ef;
+            font-weight: 600;
+        }
+        
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 14px;
             border-radius: 8px;
+            border: 2px solid #0077b6;
+            background: rgba(20, 30, 50, 0.8);
+            color: white;
             font-size: 16px;
-            cursor: pointer;
+            transition: all 0.3s;
         }
         
-        .answer-btn.correct {
-            background: #2E7D32;
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #00b4d8;
+            box-shadow: 0 0 15px rgba(0, 180, 216, 0.5);
         }
         
-        .answer-btn.wrong {
-            background: #C62828;
+        /* לוח ניקוד - כמו בתמונה */
+        .scoreboard-container {
+            background: rgba(10, 15, 30, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 2px solid #0077b6;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
         }
         
-        .scoreboard {
-            background: rgba(0,0,0,0.7);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border: 2px solid #ffca28;
+        .scoreboard-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .scoreboard-title {
+            font-size: 2.2rem;
+            color: #00b4d8;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .scoreboard-subtitle {
+            color: #90e0ef;
+            font-size: 1.1rem;
         }
         
         .score-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
         }
         
-        .score-item {
-            background: rgba(30,30,60,0.8);
-            padding: 10px;
-            border-radius: 8px;
+        .score-card {
+            background: linear-gradient(135deg, rgba(0, 100, 200, 0.2) 0%, rgba(0, 50, 100, 0.2) 100%);
+            border: 2px solid #0077b6;
+            border-radius: 12px;
+            padding: 20px 15px;
             text-align: center;
-            border: 1px solid #4fc3f7;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         
-        .highlight {
-            background: rgba(255, 202, 40, 0.3);
-            border: 2px solid #ffca28;
+        .score-card:hover {
+            transform: translateY(-5px);
+            border-color: #00b4d8;
+            box-shadow: 0 10px 25px rgba(0, 180, 216, 0.4);
         }
         
-        .progress {
+        .score-card.highlight {
+            background: linear-gradient(135deg, rgba(0, 180, 216, 0.3) 0%, rgba(72, 202, 228, 0.3) 100%);
+            border-color: #48cae4;
+            box-shadow: 0 0 30px rgba(72, 202, 228, 0.5);
+        }
+        
+        .class-name {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 180, 216, 0.7);
+        }
+        
+        .class-points {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #48cae4;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 15px rgba(72, 202, 228, 0.9);
+        }
+        
+        .points-label {
+            color: #90e0ef;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        /* חידון */
+        .quiz-container {
+            background: rgba(10, 15, 30, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+            border: 2px solid #0077b6;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+        
+        .question-counter {
+            text-align: center;
+            color: #00b4d8;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .question-box {
+            background: rgba(20, 30, 50, 0.8);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid #0077b6;
+        }
+        
+        .question-text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: #ffffff;
+            margin-bottom: 25px;
+        }
+        
+        .answers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .answer-btn {
+            padding: 18px;
+            background: linear-gradient(135deg, #0077b6 0%, #005a8a 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .answer-btn:hover {
+            background: linear-gradient(135deg, #0096c7 0%, #0077b6 100%);
+            transform: translateY(-3px);
+        }
+        
+        .answer-btn.correct {
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+            box-shadow: 0 0 20px rgba(46, 125, 50, 0.6);
+        }
+        
+        .answer-btn.wrong {
+            background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);
+            box-shadow: 0 0 20px rgba(198, 40, 40, 0.6);
+        }
+        
+        /* פידבק */
+        .feedback-box {
+            padding: 20px;
+            border-radius: 10px;
             margin: 20px 0;
             text-align: center;
-            color: #ffca28;
-            font-size: 1.1rem;
-        }
-        
-        .feedback {
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            text-align: center;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 1.2rem;
             display: none;
+            animation: slideIn 0.5s ease;
         }
         
-        .correct-feedback {
-            background: rgba(76, 175, 80, 0.2);
-            border: 2px solid #4CAF50;
-            color: #4CAF50;
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        .wrong-feedback {
-            background: rgba(244, 67, 54, 0.2);
-            border: 2px solid #f44336;
+        .feedback-correct {
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.2) 0%, rgba(27, 94, 32, 0.2) 100%);
+            border: 2px solid #2e7d32;
+            color: #4caf50;
+        }
+        
+        .feedback-wrong {
+            background: linear-gradient(135deg, rgba(198, 40, 40, 0.2) 0%, rgba(183, 28, 28, 0.2) 100%);
+            border: 2px solid #c62828;
             color: #f44336;
         }
         
-        .status {
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px;
-            text-align: center;
-            font-weight: bold;
-            background: rgba(0,0,0,0.5);
-        }
-        
-        .online {
-            background: rgba(76, 175, 80, 0.2);
-            color: #4CAF50;
-            border: 1px solid #4CAF50;
-        }
-        
-        .offline {
-            background: rgba(244, 67, 54, 0.2);
-            color: #f44336;
-            border: 1px solid #f44336;
-        }
-        
+        /* שליטה במורים */
         .teacher-controls {
-            background: rgba(30,30,60,0.8);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
+            background: rgba(10, 15, 30, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
             border: 2px solid #ff9800;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
         }
         
-        .teacher-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
+        .teacher-title {
+            text-align: center;
+            color: #ff9800;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            font-weight: 700;
         }
         
-        .teacher-btn {
-            padding: 10px 15px;
-            background: #ff9800;
-            color: black;
+        .control-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .control-btn {
+            padding: 16px;
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
             border: none;
-            border-radius: 5px;
-            font-weight: bold;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
+            transition: all 0.3s;
         }
         
+        .control-btn:hover {
+            background: linear-gradient(135deg, #ffb74d 0%, #ff9800 100%);
+            transform: translateY(-3px);
+        }
+        
+        .control-btn.danger {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        }
+        
+        .control-btn.danger:hover {
+            background: linear-gradient(135deg, #ef5350 0%, #f44336 100%);
+        }
+        
+        .custom-points {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .custom-points input {
+            flex: 1;
+            max-width: 200px;
+            padding: 14px;
+            border-radius: 8px;
+            border: 2px solid #ff9800;
+            background: rgba(20, 30, 50, 0.8);
+            color: white;
+            font-size: 16px;
+        }
+        
+        /* סטטוס */
+        .status-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 2px solid;
+            font-weight: 600;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .status-online {
+            border-color: #4caf50;
+            color: #4caf50;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+        }
+        
+        .status-offline {
+            border-color: #f44336;
+            color: #f44336;
+            box-shadow: 0 0 20px rgba(244, 67, 54, 0.5);
+        }
+        
+        /* רספונסיביות */
         @media (max-width: 768px) {
-            .score-grid { grid-template-columns: repeat(3, 1fr); }
-            .btn { display: block; width: 90%; margin: 10px auto; }
-            .answers { grid-template-columns: 1fr; }
-            .teacher-buttons { flex-direction: column; }
+            .tournament-title {
+                font-size: 2rem;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .score-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .answers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .score-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .tournament-title {
+                font-size: 1.6rem;
+            }
         }
     </style>
     
@@ -237,152 +485,232 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
-    <div class="container">
+    <div class="main-container">
+        <!-- הדר טורניר -->
+        <div class="tournament-header">
+            <h1 class="tournament-title">🚀 טורניר החלל הבית ספרי</h1>
+            <p class="tournament-subtitle">חידון חלל אינטראקטיבי - כיתות ז'-ט'</p>
+        </div>
+        
         <!-- סטטוס חיבור -->
-        <div id="status" class="status offline">
+        <div id="statusBar" class="status-bar status-offline">
             🔄 מתחבר לענן...
         </div>
         
-        <!-- מסך בחירת סוג משתמש -->
-        <div class="screen active" id="roleScreen">
-            <div class="header">
-                <h1>🚀 חידון חלל בית ספרי</h1>
-                <p>בחרו סוג משתמש</p>
-            </div>
-            
-            <div style="text-align: center;">
-                <button class="btn" onclick="showScreen('studentLogin')">תלמיד/ה</button>
-                <button class="btn btn-teacher" onclick="showScreen('teacherLogin')">מורה</button>
+        <!-- ניווט ראשי -->
+        <div class="nav-buttons" id="mainNav" style="display: none;">
+            <button class="nav-btn" onclick="showScreen('quizScreen')">
+                <span>🎮</span> התחל חידון
+            </button>
+            <button class="nav-btn active" onclick="showScreen('scoreboardScreen')">
+                <span>🏆</span> לוח ניקוד
+            </button>
+            <button class="nav-btn" onclick="showScreen('teacherScreen')">
+                <span>👨‍🏫</span> ניהול מורה
+            </button>
+            <button class="nav-btn" onclick="logout()">
+                <span>🚪</span> יציאה
+            </button>
+        </div>
+        
+        <!-- מסך בחירת תפקיד -->
+        <div id="roleScreen" class="screen active">
+            <div class="login-form">
+                <h2 class="form-title">התחברות למערכת</h2>
+                
+                <div class="nav-buttons" style="margin-top: 30px;">
+                    <button class="nav-btn" onclick="showScreen('studentLogin')">
+                        <span>👨‍🎓</span> תלמיד/ה
+                    </button>
+                    <button class="nav-btn" onclick="showScreen('teacherLogin')">
+                        <span>👨‍🏫</span> מורה
+                    </button>
+                </div>
             </div>
         </div>
         
         <!-- התחברות תלמיד -->
-        <div class="screen" id="studentLogin">
-            <div class="header">
-                <h2>התחברות תלמיד</h2>
-            </div>
-            
-            <div style="text-align: center;">
-                <input type="text" id="studentName" placeholder="שמך המלא">
-                <select id="studentClass">
-                    <option value="">בחר כיתה</option>
-                    <option value="ז1">ז1</option><option value="ז2">ז2</option>
-                    <option value="ז3">ז3</option><option value="ז4">ז4</option>
-                    <option value="ז5">ז5</option><option value="ז6">ז6</option>
-                    <option value="ז7">ז7</option><option value="ח1">ח1</option>
-                    <option value="ח2">ח2</option><option value="ח3">ח3</option>
-                    <option value="ח4">ח4</option><option value="ח5">ח5</option>
-                    <option value="ח6">ח6</option><option value="ט1">ט1</option>
-                    <option value="ט2">ט2</option><option value="ט3">ט3</option>
-                    <option value="ט4">ט4</option><option value="ט5">ט5</option>
-                    <option value="ט6">ט6</option>
-                </select>
-                <br>
-                <button class="btn" onclick="login('student')">כניסה לחידון</button>
-                <button class="btn btn-red" onclick="showScreen('roleScreen')">חזרה</button>
+        <div id="studentLogin" class="screen">
+            <div class="login-form">
+                <h2 class="form-title">התחברות תלמיד</h2>
+                
+                <div class="input-group">
+                    <label for="studentName">שם מלא:</label>
+                    <input type="text" id="studentName" placeholder="הכניסו את שמכם המלא">
+                </div>
+                
+                <div class="input-group">
+                    <label for="studentClass">בחרו כיתה:</label>
+                    <select id="studentClass">
+                        <option value="">-- בחרו כיתה --</option>
+                        <option value="ז1">ז1</option>
+                        <option value="ז2">ז2</option>
+                        <option value="ז3">ז3</option>
+                        <option value="ז4">ז4</option>
+                        <option value="ז5">ז5</option>
+                        <option value="ז6">ז6</option>
+                        <option value="ז7">ז7</option>
+                        <option value="ח1">ח1</option>
+                        <option value="ח2">ח2</option>
+                        <option value="ח3">ח3</option>
+                        <option value="ח4">ח4</option>
+                        <option value="ח5">ח5</option>
+                        <option value="ח6">ח6</option>
+                        <option value="ט1">ט1</option>
+                        <option value="ט2">ט2</option>
+                        <option value="ט3">ט3</option>
+                        <option value="ט4">ט4</option>
+                        <option value="ט5">ט5</option>
+                        <option value="ט6">ט6</option>
+                    </select>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="nav-btn" onclick="login('student')" style="padding: 16px 40px;">
+                        <span>🚀</span> התחל חידון
+                    </button>
+                    <button class="nav-btn" onclick="showScreen('roleScreen')" style="background: #666; margin-top: 15px;">
+                        <span>↩️</span> חזרה
+                    </button>
+                </div>
             </div>
         </div>
         
         <!-- התחברות מורה -->
-        <div class="screen" id="teacherLogin">
-            <div class="header">
-                <h2>התחברות מורה</h2>
-          
-            </div>
-            
-            <div style="text-align: center;">
-                <input type="text" id="teacherName" placeholder="שם המורה">
-                <input type="password" id="teacherPassword" placeholder="סיסמת מורה">
-                <select id="teacherClass">
-                    <option value="">בחר כיתה</option>
-                    <option value="ז1">ז1</option><option value="ז2">ז2</option>
-                    <option value="ז3">ז3</option><option value="ז4">ז4</option>
-                    <option value="ז5">ז5</option><option value="ז6">ז6</option>
-                    <option value="ז7">ז7</option><option value="ח1">ח1</option>
-                    <option value="ח2">ח2</option><option value="ח3">ח3</option>
-                    <option value="ח4">ח4</option><option value="ח5">ח5</option>
-                    <option value="ח6">ח6</option><option value="ט1">ט1</option>
-                    <option value="ט2">ט2</option><option value="ט3">ט3</option>
-                    <option value="ט4">ט4</option><option value="ט5">ט5</option>
-                    <option value="ט6">ט6</option>
-                </select>
-                <br>
-                <button class="btn btn-teacher" onclick="login('teacher')">כניסה למערכת מורים</button>
-                <button class="btn btn-red" onclick="showScreen('roleScreen')">חזרה</button>
-            </div>
-        </div>
-        
-        <!-- מסך תלמיד (חידון) -->
-        <div class="screen" id="studentScreen">
-            <div class="header">
-                <h2 id="studentWelcome"></h2>
-                <p id="studentClassInfo"></p>
-            </div>
-            
-            <div class="progress">
-                שאלה <span id="currentQuestionNum">1</span> מתוך 50
-            </div>
-            
-            <div class="quiz-box">
-                <div class="question" id="questionText"></div>
-                <div class="answers" id="answers"></div>
-            </div>
-            
-            <div class="feedback" id="feedback"></div>
-            
-            <div style="text-align: center;">
-                <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">שאלה הבאה</button>
-            </div>
-            
-            <div class="scoreboard">
-                <h3 style="text-align: center; color: #ffca28;">🏆 לוח ניקוד כיתות</h3>
-                <div class="score-grid" id="scoreboard"></div>
-            </div>
-            
-            <div style="text-align: center; margin-top: 20px;">
-                <button class="btn btn-red" onclick="logout()">יציאה מהמערכת</button>
-            </div>
-        </div>
-        
-        <!-- מסך מורה (ניהול) -->
-        <div class="screen" id="teacherScreen">
-            <div class="header">
-                <h2 id="teacherWelcome"></h2>
-                <p id="teacherClassInfo"></p>
-            </div>
-            
-            <div class="teacher-controls">
-                <h3 style="text-align: center; color: #ff9800;">⚙️ ניהול כיתה</h3>
-                <div class="teacher-buttons">
-                    <button class="teacher-btn" onclick="addPoints(1)">+1 נקודה</button>
-                    <button class="teacher-btn" onclick="addPoints(5)">+5 נקודות</button>
-                    <button class="teacher-btn" onclick="addPoints(10)">+10 נקודות</button>
-                    <button class="teacher-btn" onclick="subtractPoints(1)">-1 נקודה</button>
-                    <button class="teacher-btn" onclick="resetClassPoints()">אפס נקודות לכיתה</button>
+        <div id="teacherLogin" class="screen">
+            <div class="login-form">
+                <h2 class="form-title">התחברות מורה</h2>
+                
+                <div class="input-group">
+                    <label for="teacherName">שם המורה:</label>
+                    <input type="text" id="teacherName" placeholder="שם המורה">
                 </div>
                 
-                <div style="text-align: center; margin-top: 15px;">
-                    <input type="number" id="customPoints" placeholder="מספר נקודות" style="width: 150px;">
-                    <button class="teacher-btn" onclick="addCustomPoints()">הוסף נקודות</button>
+                <div class="input-group">
+                    <label for="teacherPassword">סיסמת מורה:</label>
+                    <input type="password" id="teacherPassword" placeholder="הסיסמה היא 1957">
+                </div>
+                
+                <div class="input-group">
+                    <label for="teacherClass">בחרו כיתה:</label>
+                    <select id="teacherClass">
+                        <option value="">-- בחרו כיתה --</option>
+                        <option value="ז1">ז1</option>
+                        <option value="ז2">ז2</option>
+                        <option value="ז3">ז3</option>
+                        <option value="ז4">ז4</option>
+                        <option value="ז5">ז5</option>
+                        <option value="ז6">ז6</option>
+                        <option value="ז7">ז7</option>
+                        <option value="ח1">ח1</option>
+                        <option value="ח2">ח2</option>
+                        <option value="ח3">ח3</option>
+                        <option value="ח4">ח4</option>
+                        <option value="ח5">ח5</option>
+                        <option value="ח6">ח6</option>
+                        <option value="ט1">ט1</option>
+                        <option value="ט2">ט2</option>
+                        <option value="ט3">ט3</option>
+                        <option value="ט4">ט4</option>
+                        <option value="ט5">ט5</option>
+                        <option value="ט6">ט6</option>
+                    </select>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="nav-btn" onclick="login('teacher')" style="padding: 16px 40px; background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);">
+                        <span>👨‍🏫</span> כניסה למערכת מורים
+                    </button>
+                    <button class="nav-btn" onclick="showScreen('roleScreen')" style="background: #666; margin-top: 15px;">
+                        <span>↩️</span> חזרה
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- מסך חידון -->
+        <div id="quizScreen" class="screen">
+            <div class="quiz-container">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <h2 style="color: #00b4d8; font-size: 1.8rem;">👨‍🚀 שלום, <span id="studentNameDisplay"></span>!</h2>
+                    <p style="color: #90e0ef; font-size: 1.1rem;">כיתה: <span id="studentClassDisplay" style="font-weight: bold; color: #48cae4;"></span></p>
+                </div>
+                
+                <div class="question-counter">
+                    שאלה <span id="currentQuestionNum">1</span> מתוך 50
+                </div>
+                
+                <div class="question-box">
+                    <div class="question-text" id="questionText"></div>
+                    <div class="answers-grid" id="answers"></div>
+                </div>
+                
+                <div class="feedback-box" id="feedback"></div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="nav-btn" id="nextBtn" onclick="nextQuestion()" style="display: none; padding: 16px 40px;">
+                        <span>➡️</span> שאלה הבאה
+                    </button>
                 </div>
             </div>
             
-            <div class="teacher-controls">
-                <h3 style="text-align: center; color: #ff9800;">⚡ פעולות מערכת</h3>
-                <div class="teacher-buttons">
-                    <button class="teacher-btn" onclick="resetAllPoints()" style="background: #f44336; color: white;">אפס כל הנקודות</button>
-                    <button class="teacher-btn" onclick="exportPoints()">ייצוא נתונים</button>
-                    <button class="teacher-btn" onclick="showAllPoints()">הצג כל הנקודות</button>
+            <div class="scoreboard-container">
+                <div class="scoreboard-header">
+                    <h2 class="scoreboard-title">🏆 לוח ניקוד</h2>
+                    <p class="scoreboard-subtitle">צבירת נקודות בזמן אמת</p>
                 </div>
+                <div class="score-grid" id="scoreboardQuiz"></div>
             </div>
-            
-            <div class="scoreboard">
-                <h3 style="text-align: center; color: #ffca28;">🏆 לוח ניקוד כל הכיתות</h3>
+        </div>
+        
+        <!-- מסך לוח ניקוד -->
+        <div id="scoreboardScreen" class="screen">
+            <div class="scoreboard-container">
+                <div class="scoreboard-header">
+                    <h2 class="scoreboard-title">🏆 טבלת התוצאות</h2>
+                    <p class="scoreboard-subtitle">חידון החלל הבית ספרי - עדכון בזמן אמת</p>
+                </div>
+                <div class="score-grid" id="scoreboardMain"></div>
+            </div>
+        </div>
+        
+        <!-- מסך מורה -->
+        <div id="teacherScreen" class="screen">
+            <div class="scoreboard-container">
+                <div class="scoreboard-header">
+                    <h2 class="scoreboard-title">👨‍🏫 פאנל ניהול מורה</h2>
+                    <p class="scoreboard-subtitle">כיתה: <span id="teacherClassDisplay" style="color: #ff9800; font-weight: bold;"></span></p>
+                </div>
                 <div class="score-grid" id="teacherScoreboard"></div>
             </div>
             
-            <div style="text-align: center; margin-top: 20px;">
-                <button class="btn btn-red" onclick="logout()">יציאה מהמערכת</button>
+            <div class="teacher-controls">
+                <h3 class="teacher-title">ניהול נקודות לכיתה</h3>
+                
+                <div class="control-buttons">
+                    <button class="control-btn" onclick="teacherAddPoints(1)">+1 נקודה</button>
+                    <button class="control-btn" onclick="teacherAddPoints(5)">+5 נקודות</button>
+                    <button class="control-btn" onclick="teacherAddPoints(10)">+10 נקודות</button>
+                    <button class="control-btn" onclick="teacherSubtractPoints(1)">-1 נקודה</button>
+                </div>
+                
+                <div class="custom-points">
+                    <input type="number" id="customPointsInput" placeholder="מספר נקודות" min="1" max="100">
+                    <button class="control-btn" onclick="teacherAddCustomPoints()" style="padding: 14px 25px;">
+                        הוסף נקודות
+                    </button>
+                </div>
+            </div>
+            
+            <div class="teacher-controls">
+                <h3 class="teacher-title">פעולות ניהול</h3>
+                
+                <div class="control-buttons">
+                    <button class="control-btn" onclick="teacherResetClass()">אפס נקודות לכיתה</button>
+                    <button class="control-btn danger" onclick="teacherResetAll()">אפס כל הנקודות</button>
+                    <button class="control-btn" onclick="teacherShowAllPoints()">הצג כל הנקודות</button>
+                    <button class="control-btn" onclick="teacherExportData()">ייצא נתונים</button>
+                </div>
             </div>
         </div>
     </div>
@@ -467,44 +795,35 @@
         // ================ Firebase ================
         function initFirebase() {
             try {
-                console.log("מתחבר ל-Firebase...");
                 firebase.initializeApp(firebaseConfig);
                 db = firebase.database();
                 
-                // בדיקת חיבור
                 const connectedRef = db.ref('.info/connected');
                 connectedRef.on('value', (snap) => {
                     const connected = snap.val() === true;
                     updateStatus(connected);
                     
                     if (connected) {
-                        console.log("✅ מחובר לענן!");
                         setupDatabase();
                     }
                 });
                 
             } catch (error) {
-                console.error("❌ שגיאת Firebase:", error);
                 updateStatus(false);
-                alert("לא ניתן להתחבר לענן. המערכת תעבוד מקומית.");
             }
         }
         
         function setupDatabase() {
             pointsRef = db.ref('points');
             
-            // האזנה לשינויים בזמן אמת
             pointsRef.on('value', (snapshot) => {
                 const data = snapshot.val() || {};
                 
-                // עדכון נקודות
                 classes.forEach(cls => {
                     points[cls] = data[cls] || 0;
                 });
                 
-                // עדכון תצוגה
-                updateScoreboards();
-                updateUserInfo();
+                updateAllScoreboards();
             });
         }
         
@@ -517,7 +836,6 @@
             try {
                 await pointsRef.set(points);
             } catch (error) {
-                console.error("שגיאה בשמירה לענן:", error);
                 saveLocal();
             }
         }
@@ -536,13 +854,13 @@
         }
         
         function updateStatus(connected) {
-            const statusEl = document.getElementById('status');
+            const statusEl = document.getElementById('statusBar');
             if (connected) {
-                statusEl.textContent = "✅ מחובר לענן - נקודות משותפות";
-                statusEl.className = "status online";
+                statusEl.textContent = "✅ מחובר לענן - נקודות מעודכנות בזמן אמת";
+                statusEl.className = "status-bar status-online";
             } else {
                 statusEl.textContent = "⚠️ מצב מקלי - נקודות נשמרות במחשב זה בלבד";
-                statusEl.className = "status offline";
+                statusEl.className = "status-bar status-offline";
             }
         }
         
@@ -570,12 +888,12 @@
                 role: 'student' 
             };
             
-            document.getElementById('studentWelcome').textContent = `שלום ${name}!`;
-            document.getElementById('studentClassInfo').textContent = `כיתה ${className}`;
+            document.getElementById('studentNameDisplay').textContent = name;
+            document.getElementById('studentClassDisplay').textContent = className;
             
-            showScreen('studentScreen');
+            document.getElementById('mainNav').style.display = 'flex';
+            showScreen('quizScreen');
             showQuestion();
-            updateScoreboards();
         }
         
         function loginTeacher() {
@@ -599,11 +917,10 @@
                 role: 'teacher' 
             };
             
-            document.getElementById('teacherWelcome').textContent = `מורה ${name}`;
-            document.getElementById('teacherClassInfo').textContent = `כיתה ${className}`;
+            document.getElementById('teacherClassDisplay').textContent = className;
             
+            document.getElementById('mainNav').style.display = 'flex';
             showScreen('teacherScreen');
-            updateScoreboards();
         }
         
         // ================ פונקציות חידון ================
@@ -636,29 +953,24 @@
             const q = questions[currentQuestionIndex];
             const feedback = document.getElementById('feedback');
             
-            // חסימת כפתורים
             document.querySelectorAll('.answer-btn').forEach(btn => {
                 btn.disabled = true;
             });
             
             if (answerIndex === q.correct) {
                 feedback.innerHTML = '🎉 תשובה נכונה! +1 נקודה לכיתה!';
-                feedback.className = 'feedback correct-feedback';
+                feedback.className = 'feedback-box feedback-correct';
                 
-                // הוסף נקודה לכיתה
                 points[currentUser.class] = (points[currentUser.class] || 0) + 1;
                 answeredCorrectly++;
                 
-                // שמור נקודות בענן
                 saveToCloud();
                 
-                // סמן תשובה נכונה
                 document.querySelectorAll('.answer-btn')[q.correct].classList.add('correct');
             } else {
                 feedback.innerHTML = `❌ לא נכון. התשובה הנכונה: ${q.answers[q.correct]}`;
-                feedback.className = 'feedback wrong-feedback';
+                feedback.className = 'feedback-box feedback-wrong';
                 
-                // סמן תשובות שגויות ונכונות
                 document.querySelectorAll('.answer-btn')[answerIndex].classList.add('wrong');
                 document.querySelectorAll('.answer-btn')[q.correct].classList.add('correct');
             }
@@ -666,8 +978,7 @@
             feedback.style.display = 'block';
             document.getElementById('nextBtn').style.display = 'block';
             
-            // עדכן לוח ניקוד
-            updateScoreboards();
+            updateAllScoreboards();
         }
         
         function nextQuestion() {
@@ -683,37 +994,36 @@
             const percentage = Math.round((answeredCorrectly / totalQuestions) * 100);
             alert(`🎊 סיימת את החידון!\n\nתוצאות:\n✅ ${answeredCorrectly} מתוך ${totalQuestions} תשובות נכונות\n📊 ${percentage}% הצלחה\n🏆 כיתה ${currentUser.class}: ${points[currentUser.class]} נקודות`);
             
-            // איפוס לחידון חדש
             currentQuestionIndex = 0;
             answeredCorrectly = 0;
             showQuestion();
         }
         
         // ================ פונקציות מורה ================
-        function addPoints(amount) {
+        function teacherAddPoints(amount) {
             if (!currentUser || currentUser.role !== 'teacher') return;
             
             points[currentUser.class] = (points[currentUser.class] || 0) + amount;
             saveToCloud();
-            updateScoreboards();
+            updateAllScoreboards();
             alert(`נוספו ${amount} נקודות לכיתה ${currentUser.class}`);
         }
         
-        function subtractPoints(amount) {
+        function teacherSubtractPoints(amount) {
             if (!currentUser || currentUser.role !== 'teacher') return;
             
             if (points[currentUser.class] >= amount) {
                 points[currentUser.class] -= amount;
                 saveToCloud();
-                updateScoreboards();
+                updateAllScoreboards();
                 alert(`הופחתו ${amount} נקודות מכיתה ${currentUser.class}`);
             } else {
                 alert('אין מספיק נקודות להפחתה');
             }
         }
         
-        function addCustomPoints() {
-            const input = document.getElementById('customPoints');
+        function teacherAddCustomPoints() {
+            const input = document.getElementById('customPointsInput');
             const amount = parseInt(input.value);
             
             if (isNaN(amount) || amount < 1) {
@@ -721,22 +1031,22 @@
                 return;
             }
             
-            addPoints(amount);
+            teacherAddPoints(amount);
             input.value = '';
         }
         
-        function resetClassPoints() {
+        function teacherResetClass() {
             if (!currentUser || currentUser.role !== 'teacher') return;
             
             if (confirm(`האם לאפס את הנקודות של כיתה ${currentUser.class}?`)) {
                 points[currentUser.class] = 0;
                 saveToCloud();
-                updateScoreboards();
+                updateAllScoreboards();
                 alert(`נקודות כיתה ${currentUser.class} אופסו`);
             }
         }
         
-        function resetAllPoints() {
+        function teacherResetAll() {
             if (!currentUser || currentUser.role !== 'teacher') return;
             
             if (confirm('⚠️ האם לאפס את כל הנקודות של כל הכיתות?\nפעולה זו לא ניתנת לביטול!')) {
@@ -744,12 +1054,12 @@
                     points[cls] = 0;
                 });
                 saveToCloud();
-                updateScoreboards();
+                updateAllScoreboards();
                 alert('כל הנקודות אופסו');
             }
         }
         
-        function showAllPoints() {
+        function teacherShowAllPoints() {
             if (!currentUser || currentUser.role !== 'teacher') return;
             
             let message = "נקודות כל הכיתות:\n\n";
@@ -759,27 +1069,23 @@
             alert(message);
         }
         
-        function exportPoints() {
+        function teacherExportData() {
             if (!currentUser || currentUser.role !== 'teacher') return;
             
             const dataStr = JSON.stringify(points, null, 2);
             const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
             
-            const exportFileDefaultName = 'נקודות_כיתות.json';
-            
             const linkElement = document.createElement('a');
             linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.setAttribute('download', 'נקודות_כיתות.json');
             linkElement.click();
-            
-            alert('הנתונים יוצאו לקובץ JSON');
         }
         
         // ================ פונקציות תצוגה ================
-        function updateScoreboards() {
-            updateScoreboard('scoreboard');
+        function updateAllScoreboards() {
+            updateScoreboard('scoreboardQuiz');
+            updateScoreboard('scoreboardMain');
             updateScoreboard('teacherScoreboard');
-            updateUserInfo();
         }
         
         function updateScoreboard(boardId) {
@@ -789,32 +1095,18 @@
             board.innerHTML = '';
             
             classes.forEach(cls => {
-                const item = document.createElement('div');
-                item.className = 'score-item';
+                const card = document.createElement('div');
+                card.className = 'score-card';
                 if (cls === currentUser?.class) {
-                    item.classList.add('highlight');
+                    card.classList.add('highlight');
                 }
-                item.innerHTML = `
-                    <div style="font-weight: bold; color: #ffca28;">${cls}</div>
-                    <div style="font-size: 1.5rem; color: #4fc3f7; font-weight: bold;">
-                        ${points[cls] || 0}
-                    </div>
+                card.innerHTML = `
+                    <div class="class-name">${cls}</div>
+                    <div class="class-points">${points[cls] || 0}</div>
+                    <div class="points-label">נקודות</div>
                 `;
-                board.appendChild(item);
+                board.appendChild(card);
             });
-        }
-        
-        function updateUserInfo() {
-            if (!currentUser) return;
-            
-            const className = currentUser.class;
-            if (currentUser.role === 'student') {
-                document.getElementById('studentClassInfo').textContent = 
-                    `כיתה ${className}: ${points[className] || 0} נקודות`;
-            } else {
-                document.getElementById('teacherClassInfo').textContent = 
-                    `כיתה ${className}: ${points[className] || 0} נקודות`;
-            }
         }
         
         function showScreen(screenId) {
@@ -822,6 +1114,21 @@
                 s.classList.remove('active');
             });
             document.getElementById(screenId).classList.add('active');
+            
+            // עדכן כפתור פעיל
+            if (document.getElementById('mainNav')) {
+                document.querySelectorAll('#mainNav .nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                if (screenId === 'quizScreen') {
+                    document.querySelectorAll('#mainNav .nav-btn')[0].classList.add('active');
+                } else if (screenId === 'scoreboardScreen') {
+                    document.querySelectorAll('#mainNav .nav-btn')[1].classList.add('active');
+                } else if (screenId === 'teacherScreen') {
+                    document.querySelectorAll('#mainNav .nav-btn')[2].classList.add('active');
+                }
+            }
         }
         
         function logout() {
@@ -829,28 +1136,34 @@
                 currentUser = null;
                 currentQuestionIndex = 0;
                 answeredCorrectly = 0;
+                
+                document.getElementById('mainNav').style.display = 'none';
                 showScreen('roleScreen');
                 
-                // נקה שדות התחברות
                 document.getElementById('studentName').value = '';
                 document.getElementById('studentClass').value = '';
                 document.getElementById('teacherName').value = '';
                 document.getElementById('teacherPassword').value = '';
                 document.getElementById('teacherClass').value = '';
-                document.getElementById('customPoints').value = '';
+                document.getElementById('customPointsInput').value = '';
             }
         }
         
         // ================ אתחול ================
         function init() {
-            // טען נקודות מקומיות
             loadLocal();
-            
-            // התחל Firebase
             initFirebase();
+            updateAllScoreboards();
             
-            // עדכן לוח ניקוד ראשוני
-            updateScoreboards();
+            // הגדר אירועי מקלדת
+            document.addEventListener('keydown', (e) => {
+                if (e.key === '1' || e.key === '2' || e.key === '3' || e.key === '4') {
+                    const index = parseInt(e.key) - 1;
+                    if (document.getElementById('answers').children.length > index) {
+                        document.getElementById('answers').children[index].click();
+                    }
+                }
+            });
         }
         
         // הפעל כשהדף נטען
